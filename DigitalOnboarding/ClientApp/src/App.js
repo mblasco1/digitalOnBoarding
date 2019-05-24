@@ -5,6 +5,7 @@ import { Layout } from './components/Layout';
 import { Phone } from './components/Phone';
 import { IdCheck } from './components/IdCheck';
 import { Address } from './components/Address';
+import { BioID } from './components/BioID';
 
 export default class App extends Component {
   displayName = App.name
@@ -20,6 +21,9 @@ export default class App extends Component {
             </Tab>
             <Tab eventKey="idcheck" title="ID Check">
                 <IdCheck />
+            </Tab>
+            <Tab eventKey="bioId" title="BioID">
+                <BioID />
             </Tab>
         </Tabs>
     );

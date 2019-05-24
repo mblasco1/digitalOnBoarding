@@ -22,9 +22,20 @@
     -->
     <title>DigitalOnboarding</title>
 
+    <!--
+        bioid:
+    -->
+    <script src="uui/js/jquery-3.4.1.min.js"></script>
+    <script src="uui/js/getUserMedia.min.js"></script>
+    <script src="uui/js/bws.capture.js"></script>
+    <script src="uui/js/three.min.js"></script>
+    <script src="uui/js/objLoader.min.js"></script>
+    <script src="uui/js/HeadGuide.js"></script>
+    <link href="uui/css/uui.css" rel="stylesheet" />
+
 
     <!--
-      needed for micorblink    ?
+      microblink:
     -->
     <script src="https://www.gstatic.com/firebasejs/5.7.2/firebase-app.js"></script>
     <script src="https://www.gstatic.com/firebasejs/5.7.2/firebase-firestore.js"></script>
@@ -41,6 +52,10 @@
             messagingSenderId: "902458803135"
         };
         firebase.initializeApp(config);
+
+        const firestore = firebase.firestore();
+        const settings = {/* your settings... */ timestampsInSnapshots: true };
+        firestore.settings(settings);
     </script>
     <script>
 
