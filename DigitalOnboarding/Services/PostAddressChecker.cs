@@ -29,8 +29,9 @@ namespace DigitalOnboarding.Services
                 {
                     Names = address.Name,
                     Street = address.Street,
-                    Town = address.Town,
-                    Zip = address.Zip,
+                    Town = address.City,
+                    HouseNbr = address.HouseNumber,
+                    Zip = address.PostalCode,
                     Params = new AddressChecker.AdressCheckerRequestTypeParams()
                     {
                         CallUser = "TU_4400172_0001",
@@ -48,10 +49,7 @@ namespace DigitalOnboarding.Services
                 var responseRow = response.Rows[0];
                 return new Result()
                 {
-                    GuaranteedDelivery = (GuaranteedDelivery)int.Parse(responseRow.GuaranteedDelivery),
-                    MatchHistoric = (MatchHistoric)int.Parse(responseRow.MatchHistoric),
-                    MatchType = (MatchType)int.Parse(responseRow.MatchType),
-                    MatchUniqueness = (MatchUniqueness)int.Parse(responseRow.MatchUniqueness)
+                    IsValid = responseRow.MatchUniqueness == "1" && responseRow.MatchType == "1"
                 };
             }
             finally

@@ -68,7 +68,7 @@
         this.renderer.setSize(width, height);
 
         container.appendChild(this.renderer.domElement);
-        window.addEventListener('resize', this.onHeadResize, false);
+        window.addEventListener('resize', () => { this.onHeadResize() }, false);
 
     }
 
@@ -95,6 +95,7 @@
         $(this.containerId).css({ 'margin-top': Math.floor(-height / 2), 'margin-left': Math.floor(-width / 2) });
         $(this.containerId).attr('width', width);
         $(this.containerId).attr('height', height);
+
 
         this.camera.aspect = width / height;
         this.camera.updateProjectionMatrix();

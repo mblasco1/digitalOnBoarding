@@ -13,8 +13,16 @@ namespace DigitalOnboarding.Controllers
     [ApiController]
     public class AddressController : ControllerBase
     {
-        [HttpPost]
-        public async Task<ActionResult<Result>> VerifyAddress([FromServices] IAddressChecker addressChecker, [FromForm]Address address)
+        [HttpPost("verify")]
+        [Consumes("multipart/form-data")]
+        public async Task<ActionResult<Result>> VerifyForm([FromServices] IAddressChecker addressChecker, [FromForm]Address address)
+        {
+            return await addressChecker.Verify(address);
+        }
+
+        [HttpPost("verify")]
+        [Consumes("application/json")]
+        public async Task<ActionResult<Result>> VerifyBody([FromServices] IAddressChecker addressChecker, [FromBody]Address address)
         {
             return await addressChecker.Verify(address);
         }

@@ -1,5 +1,6 @@
 ﻿import React, { Component } from 'react';
-import $ from 'jquery'; 
+import $ from 'jquery';
+import './BioID.css';
 
 
 export class BioID extends Component {
@@ -15,8 +16,8 @@ export class BioID extends Component {
         var trait = "Face,Periocular";
         var executions = 5;
         var recordings = 5;
-        var challengeResponse = "false";
-        var challenges = "[]";
+        var challengeResponse = "true";
+        var challenges = [];
         var maxHeight = 320;
         // END OF CONFIGURATION
 
@@ -76,7 +77,7 @@ export class BioID extends Component {
         /* ----------------- Set button functionality ------------------------------------------*/
 
 
-        
+
         initialize();
 
         // set navigation for the buttons
@@ -199,8 +200,9 @@ export class BioID extends Component {
         }
 
 
-        /* ------------------ Start BWS capture jQuery plugin -----------------------------------*/
 
+        /* ------------------ Start BWS capture jQuery plugin -----------------------------------*/
+        let me = this;
         // startup code
         function onStart(headGuide) {
             bwsCapture.start(function () {
@@ -208,7 +210,7 @@ export class BioID extends Component {
                 captureStarted();
             }, function (error) {
                 // show button for continue without biometrics (skip biometric task)
-                $('#uuiskip').show();
+                //$('#uuiskip').show();
                 // show button for BioID app (interapp communication)
                 if (task === 'verification' || task === 'enrollment') {
                     $('#uuimobileapp').show();
@@ -366,6 +368,7 @@ export class BioID extends Component {
                             let $image = $('#uuiuploaded' + modUploaded);
                             $image.attr('src', dataURL);
                             $image.show();
+                            me.props.onImageUpload(dataURL, "face");
                         }
                     } else if (status === 'NoFaceFound' || status === 'MultipleFacesFound') {
                         // upload failed
@@ -386,7 +389,7 @@ export class BioID extends Component {
             $('#uuiinstruction').show();
 
             $('#uuistart').show().click(function () { startRecording(task === 'enrollment'); });
-            
+
         }
 
         // called from onStart when recording is done
@@ -417,9 +420,9 @@ export class BioID extends Component {
                     <canvas id="uuicanvas" className="liveview"></canvas>
                     <div id="uuimessage" className="message"></div>
                     <div id="uuihead" className="head"></div>
-                    <a id="uuistart" className="startbutton" href="#"><img src="~/uui/images/play.svg" className="button-big-grow" alt="start" title="Start the recording of images" data-res="buttonStart" /></a>
+                    <a id="uuistart" className="startbutton" href="#"><img src="/uui/images/play.svg" className="button-big-grow" alt="start" title="Start the recording of images" data-res="buttonStart" /></a>
                     <div id="uuisingleupload" className="uploadstatus-single">
-                    
+
                         <div id="uuiimage1" className="image">
                             <div id="uuiwait1" className="spinner spinner-wait"></div>
                             <div id="uuiupload1" className="spinner spinner-upload" data-res="uploadInfo">Uploading...</div>

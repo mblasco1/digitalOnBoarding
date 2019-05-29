@@ -7,14 +7,26 @@ export class IdCheck extends Component {
 
     constructor(props) {
         super(props);
-        //Microblink.SDK.SetRecognizers(['MRTD', 'USDL']);
-        window.Microblink.SDK.SetUserId('test-user-id@microblink.com');
+        window.Microblink.SDK.SetEndpoint('/api/microblink');
         window.Microblink.SDK.SetRecognizers(['MRTD']);
-        window.Microblink.SDK.SetAuthorization('Bearer MDY0YWNlMGNiN2IzNGUwZTk4YWVmMDVhZDEyOGJjY2E6Mzk5NzNkNDUtYjg4MS00OWE1LTlhMTItYmEzYTRkNmYzY2Fj');
+
+        let me = this;
+
+        function blobToDataURL(blob) {
+            return new Promise((fulfill, reject) => {
+                let reader = new FileReader();
+                reader.onerror = reject;
+                reader.onload = (e) => fulfill(reader.result);
+                reader.readAsDataURL(blob);
+            });
+        }
 
         window.Microblink.SDK.RegisterListener({
             onScanSuccess: (data) => {
                 console.log('Data from Microblink API is', data);
+                blobToDataURL(data.sourceBlob).then((dataUrl) => {
+                    me.props.onImageUpload(dataUrl, "id");
+                });
             },
             onScanError: (error) => {
                 console.error('Error from Microblink API is', error);
@@ -29,7 +41,7 @@ export class IdCheck extends Component {
 
     render() {
         return (
-            <microblink-ui-web  autoscroll>
+            <microblink-ui-web tabs autoscroll>
             </microblink-ui-web>
         );
     }

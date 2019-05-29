@@ -1,10 +1,12 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Net;
 using System.Net.Http;
 using System.Net.Http.Headers;
 using System.Text;
 using System.Threading.Tasks;
+using DigitalOnboarding.Models;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.WebUtilities;
@@ -64,7 +66,6 @@ namespace DigitalOnboarding.Controllers
                         }
                     }
 
-                    // render the BWS unified user interface
                     return access_token;
                 }
             }
@@ -85,6 +86,32 @@ namespace DigitalOnboarding.Controllers
             LiveDetection = 0x100,
             ChallengeResponse = 0x200,
             AutoEnroll = 0x1000
+        }
+
+        [HttpPost("[action]")]
+        public async Task<Result> PhotoVerify([FromBody] PhotoVerifyImages images)
+        {
+            using (var client = new HttpClient())
+            {
+                client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Basic",
+                    Convert.ToBase64String(Encoding.ASCII.GetBytes($"{_appID}:{_appSecret}")));
+
+
+                string json = $@"{{""liveimage1"":""{images.liveimage1}"",""liveimage2"":""{images.liveimage2}"",""idphoto"":""{images.idphoto}""}}";
+
+                using (var content = new StringContent(json, Encoding.ASCII, "application/json"))
+                using (var response = await client.PostAsync($"https://bws.bioid.com/extension/photoverify?accuracy={images.accuracy ?? 4}", content))
+                {
+                    if (response.StatusCode == HttpStatusCode.OK)
+                    {
+                        if (bool.TryParse(await response.Content.ReadAsStringAsync(), out var parsed))
+                        {
+                            return new Result() { IsValid = parsed };
+                        }
+                    }
+                    return new Result() { IsValid = false };
+                }
+            }
         }
     }
 }

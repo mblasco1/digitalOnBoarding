@@ -11,14 +11,14 @@ export class Address extends Component {
         this.handleSubmit = this.handleSubmit.bind(this);
     }
 
-    handleSubmit(event) {
+    async handleSubmit(event) {
         event.preventDefault();
-        const data = new FormData(event.target);
 
-        fetch('/api/address', {
+        var result = await fetch('/api/address/verify', {
             method: 'POST',
-            body: data
+            body: new FormData(event.target)
         });
+        console.log(result);
     }
 
     render() {
@@ -41,19 +41,19 @@ export class Address extends Component {
 
                     <Form.Group as={Col}  controlId="streetNbr">
                         <Form.Label>Street Number</Form.Label>
-                        <Form.Control type="text" placeholder="Street Number" name="houseNbr" />
+                        <Form.Control type="text" placeholder="Street Number" name="houseNumber" />
                     </Form.Group>
                 </Form.Row>
 
                 <Form.Row>
                     <Form.Group as={Col} xs={4} controlId="zip">
                         <Form.Label>Zip Code</Form.Label>
-                        <Form.Control type="number" placeholder="Zip Code" name="zip"/>
+                        <Form.Control type="number" placeholder="Zip Code" name="postalCode"/>
                     </Form.Group>
 
                     <Form.Group as={Col} xs={8} controlId="town">
                         <Form.Label>Town</Form.Label>
-                        <Form.Control type="text" placeholder="Town" name="town" />
+                        <Form.Control type="text" placeholder="Town" name="city" />
                     </Form.Group>
                 </Form.Row>
 

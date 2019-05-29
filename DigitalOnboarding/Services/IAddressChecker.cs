@@ -11,7 +11,7 @@ namespace DigitalOnboarding.Services
         Task<Result> Verify(Address address);
     }
 
-    
+    /*
 
     public struct Result
     {
@@ -39,5 +39,5 @@ namespace DigitalOnboarding.Services
     public enum GuaranteedDelivery
     {
         deliverable, indetermined, notDeliverable
-    }
+    }*/
 }

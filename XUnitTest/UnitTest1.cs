@@ -11,10 +11,11 @@ namespace XUnitTest
         [Fact]
         public async void TestPostAddressChecker()
         {
-            var address = new Address() {
+            var address = new Address()
+            {
                 Name = "Fabio Strappazzon",
                 Street = "Webermühle",
-                HouseNbr = "42",
+                HouseNumber = "42",
                 Zip = "5432",
                 Town = "Neuenhof"
             };
