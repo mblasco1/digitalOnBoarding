@@ -16,17 +16,14 @@ namespace XUnitTest
                 Name = "Fabio Strappazzon",
                 Street = "Webermühle",
                 HouseNumber = "42",
-                Zip = "5432",
-                Town = "Neuenhof"
+                PostalCode = "5432",
+                City = "Neuenhof"
             };
 
             var checker = new PostAddressChecker();
-            var result = await checker.Verify(address);
+            var result = await checker.VerifyAsync(address);
 
-            //Assert.Equal(GuaranteedDelivery.deliverable, result.GuaranteedDelivery);
-            Assert.Equal(MatchHistoric.currentMatch, result.MatchHistoric);
-            Assert.Equal(MatchType.exactMach, result.MatchType);
-            Assert.Equal(MatchUniqueness.oneMatch, result.MatchUniqueness);
+            Assert.True(result.IsValid);
         }
         [Fact]
         public async void TestSimilarAddress()
@@ -35,18 +32,15 @@ namespace XUnitTest
             {
                 Name = "Fabio Strappazon", //should be double-z
                 Street = "Webermühle",
-                HouseNbr = "42",
-                Zip = "5432",
-                Town = "Neuenhof"
+                HouseNumber = "42",
+                PostalCode = "5432",
+                City = "Neuenhof"
             };
 
             var checker = new PostAddressChecker();
-            var result = await checker.Verify(address);
+            var result = await checker.VerifyAsync(address);
 
-            //Assert.Equal(GuaranteedDelivery.deliverable, result.GuaranteedDelivery);
-            Assert.Equal(MatchHistoric.currentMatch, result.MatchHistoric);
-            Assert.Equal(MatchType.similarMatch, result.MatchType);
-            Assert.Equal(MatchUniqueness.oneMatch, result.MatchUniqueness);
+            Assert.False(result.IsValid);
         }
     }
 }

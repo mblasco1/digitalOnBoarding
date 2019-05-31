@@ -10,7 +10,7 @@ namespace DigitalOnboarding.Services
 {
     public class PostAddressChecker : IAddressChecker
     {
-        public async Task<Result> Verify(Address address)
+        public async Task<Result> VerifyAsync(Address address)
         {
 
             var basicHttpBinding = new BasicHttpBinding(BasicHttpSecurityMode.Transport);

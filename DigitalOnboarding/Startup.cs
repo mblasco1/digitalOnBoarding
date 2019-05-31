@@ -22,6 +22,7 @@ namespace DigitalOnboarding
         public void ConfigureServices(IServiceCollection services)
         {
             services.AddSingleton<IAddressChecker, PostAddressChecker>();
+            services.AddSingleton<IBioIdClient, BioIdClient>();
 
             services.AddMvc().SetCompatibilityVersion(CompatibilityVersion.Version_2_1);
 

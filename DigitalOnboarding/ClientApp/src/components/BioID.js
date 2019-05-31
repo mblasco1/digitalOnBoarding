@@ -7,17 +7,18 @@ export class BioID extends Component {
     displayName = BioID.name
 
     async componentDidMount() {
-        var tok = await fetch('/api/bioid');
-        var token = await tok.text();
+        var res = await fetch('/api/bioid/token');
+        var response = await res.json();
+        var token = response.token;
         var returnURL = '/';
-        var state = 'encrypted_app_status';
-        var apiurl = 'https://bws.bioid.com/extension/';
-        var task = 'livenessdetection';
-        var trait = "Face,Periocular";
-        var executions = 5;
-        var recordings = 5;
-        var challengeResponse = "true";
-        var challenges = [];
+        var state = response.state;
+        var apiurl = response.apiUrl;
+        var task = response.task;
+        var trait = response.trait;
+        var executions = response.maxTries;
+        var recordings = response.recordings;
+        var challengeResponse = response.challengeResponse;
+        var challenges = JSON.parse(response.challengesJson);
         var maxHeight = 320;
         // END OF CONFIGURATION
 
@@ -189,7 +190,7 @@ export class BioID extends Component {
                         maxheight: maxHeight
                     });
                     try {
-                        let head = new window.HeadGuide('uuihead', 'uuiwebapp', 'uuicanvas');
+                        let head = new window.HeadGuide('uuihead', 'uuiwebapp', 'uuicanvas', task);
                         onStart(head);
                     } catch (e) {
                         console.log(e);

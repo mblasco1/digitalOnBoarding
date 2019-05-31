@@ -1,8 +1,9 @@
 ﻿class HeadGuide {
-    constructor(containerId, parentId, canvasId) {
+    constructor(containerId, parentId, canvasId, task) {
         this.containerId = '#' + containerId;
         this.parentId = '#' + parentId;
         this.canvasId = '#' + canvasId;
+        this.task = task;
 
         this.startTime = undefined;
         this.resetHead = false;
@@ -130,6 +131,8 @@
 
         let head = this.scene.getObjectByName('BioIDHead');
         let doAnimation = false;
+        let enrollmentTags = ['left', 'right', 'right', 'left', 'up', 'down', 'down', 'up'];
+        let predefinedTags = ['left', 'right', 'up', 'down'];
 
         if (head) {
             if (this.resetHead) {
@@ -142,7 +145,7 @@
             }
             else {
                 if (this.currentTag === 'any') {
-                    if (task === 'enrollment') {
+                    if (this.task === 'enrollment') {
                         // get predefined direction for better enrollment
                         let recording = bwsCapture.getUploaded() + bwsCapture.getUploading() - 1;
                         this.currentTag = enrollmentTags[recording];
