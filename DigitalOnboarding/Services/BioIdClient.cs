@@ -28,7 +28,7 @@ namespace DigitalOnboarding.Services
         }
         public async Task<BioIdToken> getTokenAsync()
         {
-            string query = $"token?id={appID}&bcid=xxx&task=livenessdetection&livedetection=true&challenge=true&autoenroll=false";
+            string query = $"token?id={appID}&bcid=xxx&task=livenessdetection&livedetection=true&challenge=false&autoenroll=false";
 
             var uri = new Uri(new Uri(apiUrl), query);
 
@@ -94,21 +94,22 @@ namespace DigitalOnboarding.Services
             AutoEnroll = 0x1000
         }
 
-        public async Task<Result> PhotoVerifyAsync(PhotoVerifyImages images)
+        public async Task<(Result, int, string)> PhotoVerifyAsync(PhotoVerifyImages images)
         {
             string json = $@"{{""liveimage1"":""{images.liveimage1}"",""liveimage2"":""{images.liveimage2}"",""idphoto"":""{images.idphoto}""}}";
 
             using (var content = new StringContent(json, Encoding.ASCII, "application/json"))
             using (var response = await httpClient.PostAsync(apiUrl + $"photoverify?accuracy={images.accuracy ?? 4}", content))
             {
+                var responseContent = await response.Content.ReadAsStringAsync();
                 if (response.StatusCode == HttpStatusCode.OK)
                 {
-                    if (bool.TryParse(await response.Content.ReadAsStringAsync(), out var parsed))
+                    if (bool.TryParse(responseContent, out var parsed))
                     {
-                        return new Result() { IsValid = parsed };
+                        return (new Result() { IsValid = parsed }, 200, "");
                     }
                 }
-                return new Result() { IsValid = false };
+                return (null, (int)response.StatusCode, responseContent);
             }
         }
     }

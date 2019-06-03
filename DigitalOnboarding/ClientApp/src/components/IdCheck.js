@@ -8,7 +8,7 @@ export class IdCheck extends Component {
     constructor(props) {
         super(props);
         window.Microblink.SDK.SetEndpoint('/api/microblink');
-        window.Microblink.SDK.SetRecognizers(['MRTD']);
+        window.Microblink.SDK.SetRecognizers(['MRTD', 'FACE']);
 
         let me = this;
 

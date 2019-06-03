@@ -29,14 +29,19 @@ namespace DigitalOnboarding.Controllers
             }
             catch (Exception)
             {
-                return null;
+                return StatusCode(500);
             }
         }
 
         [HttpPost("[action]")]
-        public async Task<Result> PhotoVerify([FromServices] IBioIdClient bioId, [FromBody] PhotoVerifyImages images)
+        public async Task<ActionResult<Result>> PhotoVerify([FromServices] IBioIdClient bioId, [FromBody] PhotoVerifyImages images)
         {
-            return await bioId.PhotoVerifyAsync(images);
+            (Result result, int statusCode, string response) = await bioId.PhotoVerifyAsync(images);
+            if (result == null)
+            {
+                return StatusCode(statusCode, response);
+            }
+            return result;
         }
     }
 }

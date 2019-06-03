@@ -10,8 +10,8 @@ export class BioID extends Component {
         var res = await fetch('/api/bioid/token');
         var response = await res.json();
         var token = response.token;
-        var returnURL = '/';
-        var state = response.state;
+        //var returnURL = '/';
+        //var state = response.state;
         var apiurl = response.apiUrl;
         var task = response.task;
         var trait = response.trait;
@@ -80,7 +80,7 @@ export class BioID extends Component {
 
 
         initialize();
-
+        /*
         // set navigation for the buttons
         //$('#uuicancel').attr('href', returnURL + '?error=user_abort&access_token=' + token + '&state=' + state);
         $('#uuiskip').attr('href', returnURL + '?error=user_skip&access_token=' + token + '&state=' + state);
@@ -92,11 +92,11 @@ export class BioID extends Component {
         else if (task === 'enrollment') {
             $('#uuimobileapp').attr('href', 'bioid-enroll://?access_token=' + token + '&return_url=' + returnURL + '&state=' + state);
         }
-
+        
         // hide button after first click
         $('#uuimobileapp').click(function () {
             $('#uuimobileapp').hide();
-        });
+        });*/
 
         // called from Start button and onStart to initiate a new recording
         function startRecording(countdown) {
@@ -154,6 +154,7 @@ export class BioID extends Component {
 
         // initialize - load content in specific language and initialize bws capture
         function initialize() {
+            /*
             // change title if task is enrollment
             if (task === 'enrollment') {
                 $('#uuititle').attr('data-res', 'titleEnrollment');
@@ -164,7 +165,7 @@ export class BioID extends Component {
             }
             else if (task === 'livenessdetection') {
                 $('#uuititle').attr('data-res', 'titleLiveDetection');
-            }
+            }*/
 
             // try to get language info from the browser.
             let userLangAttribute = navigator.language || navigator.userLanguage || navigator.browserLanguage || 'en';
@@ -195,7 +196,7 @@ export class BioID extends Component {
                     } catch (e) {
                         console.log(e);
                         $('#uuierror').html(formatText('webgl-error'));
-                        $('#uuiskip').show();
+                        //$('#uuiskip').show();
                     }
                 });
         }
@@ -210,12 +211,13 @@ export class BioID extends Component {
                 $('#uuicanvas').show();
                 captureStarted();
             }, function (error) {
+                    /*
                 // show button for continue without biometrics (skip biometric task)
                 //$('#uuiskip').show();
                 // show button for BioID app (interapp communication)
                 if (task === 'verification' || task === 'enrollment') {
                     $('#uuimobileapp').show();
-                }
+                }*/
                 if (error !== undefined) {
                     // different browsers use different errors
                     if (error.code === 1 || error.name === 'PermissionDeniedError') {
@@ -238,6 +240,7 @@ export class BioID extends Component {
                     // if failed restart if retries are left, but wait a bit until the user has read the error message!
                     setTimeout(function () { startRecording(true); }, 1800);
                     console.log('Current Execution: ' + currentExecution);
+                    me.props.onRestart();
                 } else {
                     // done: redirect to caller ...
                     /*let url = returnURL + '?access_token=' + token;
@@ -263,7 +266,7 @@ export class BioID extends Component {
                     }
 
                     // css media query decision
-                    if ($('#uuisingleupload').is(':visible')) {
+                    if ($('#uuisingleupload').is(':visible') == true) {
                         $('#uuiprogress' + modId).show();
                         $('#uuiprogressbar' + modId).width(message.progress + '%');
                         // if the window size changed
@@ -412,8 +415,6 @@ export class BioID extends Component {
                     <div id="uuiprompt" className="prompt">
                         <p data-res="prompt"></p>
                         <p id="uuierror" className="alert-danger"></p>
-                        <a id="uuiskip" className="button" href="" title="Skip biometric process" data-res="buttonContinue">Skip biometrics</a>
-                        <a id="uuimobileapp" className="button" href="" title="Start the BioID app" data-res="buttonMobileApp">Start BioID app</a>
                     </div>
                 </section>
                 <section id="uuiwebapp" className="webapp">
