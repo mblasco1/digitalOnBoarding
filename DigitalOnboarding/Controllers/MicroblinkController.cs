@@ -21,7 +21,7 @@ namespace DigitalOnboarding.Controllers
             using (var requestMessage = new HttpRequestMessage(HttpMethod.Post, new Uri("https://api.microblink.com/recognize/execute")))
             {
                 requestMessage.Content = streamContent;
-                requestMessage.Headers.Authorization = new AuthenticationHeaderValue("Bearer", "MjBlMTI3NmI1N2Y5NDdmNTkzNDJhN2YzZDc3NmM0NmQ6YTE2OGNjZjAtZjZlYy00ZTlmLTk0ZGUtYzYzMDVjMTNiY2Nj");                requestMessage.Content.Headers.Add("Content-Type", "application/json");
+                requestMessage.Headers.Authorization = new AuthenticationHeaderValue("Bearer", "NTU1MzFjZDhlZWY0NDNhYmEwNzhhNTc0MmJmYzFjZTQ6OGQ2MGNkY2QtYjI3NC00YTVlLTliY2QtYzc3ODUyZWI1OGM2");                requestMessage.Content.Headers.Add("Content-Type", "application/json");
                 
 
                 var response = await httpClient.SendAsync(requestMessage);

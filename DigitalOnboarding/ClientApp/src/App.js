@@ -1,12 +1,8 @@
 import React, { Component } from 'react';
-import { Tabs, Tab } from 'react-bootstrap';
-import { BrowserRouter as Route, Link} from 'react-router-dom';
-import { Layout } from './components/Layout';
-import { Phone } from './components/Phone';
+import { Route, Link} from 'react-router-dom';
 import { IdCheck } from './components/IdCheck';
 import { Address } from './components/Address';
 import { BioID } from './components/BioID';
-import { Home } from './components/Home';
 
 export default class App extends Component {
     displayName = App.name
@@ -16,14 +12,24 @@ export default class App extends Component {
         this.uploaded = false;
         this.onImageUpload = this.onImageUpload.bind(this);
         this.onRestart = this.onRestart.bind(this);
+        this.onTabSelect = this.onTabSelect.bind(this);
+        this.state = {
+            bioIdSelected: false
+        };
+    }
+
+    onTabSelect(eventKey) {
+        this.setState({ bioIdSelected: eventKey === "bioId" });
     }
 
     onRestart() {
+        console.log("restarting...");
         this.liveimage1 = undefined;
         this.liveimage2 = undefined;
     }
 
     async onImageUpload(dataUrl, type) {
+        console.log("uploading " + type);
         if (type === "id") {
             this.idphoto = dataUrl;
         } else {
@@ -47,70 +53,39 @@ export default class App extends Component {
                     accuracy: 1
                 })
             });
-            console.log("photoverify:", await result.json());
+            let response = await result.json()
+            console.log("photoverify:", response);
+            window.alert(result.status + ": " + JSON.stringify(response));
         }
-    /*<Tabs defaultActiveKey="profile">
-            <Tab eventKey="phone" title="Phone">
-                <Phone />
-            </Tab>
-            <Tab eventKey="adress" title="Address">
-                <Address />
-            </Tab>
-            <Tab eventKey="idcheck" title="ID Check">
-                <IdCheck onImageUpload={this.onImageUpload}/>
-            </Tab>
-            <Tab eventKey="bioId" title="BioID">
-                <BioID onImageUpload={this.onImageUpload}/>
-            </Tab>
-        </Tabs>*/
-
-        /* <div>
-                <nav>
-                    <Link to="/phone">
-                        Phone
-                    </Link>
-                    <Link to="/address">
-                        Address
-                    </Link>
-                    <Link to="/idCheck">
-                        Id Check
-                    </Link>
-                    <Link to="/bioId">
-                        BioId
-                    </Link>
-                </nav>
-                <hr />
-                <Route path="/phone" component={Phone} />
-                <Route path="/address" component={Address} />
-                <Route
-                    path="/idCheck"
-                    component={props => <IdCheck {...props} onImageUpload={me.onImageUpload} />}
-                />
-                <Route
-                    path="/bioId"
-                    component={props => <BioID {...props} onImageUpload={me.onImageUpload} />}
-                />
-            </div>*/
     }
 
     render() {
-        let me = this;
         return (
-           
-            <Tabs defaultActiveKey="profile">
-                <Tab eventKey="phone" title="Phone">
-                    <Phone />
-                </Tab>
-                <Tab eventKey="adress" title="Address">
-                    <Address />
-                </Tab>
-                <Tab eventKey="idcheck" title="ID Check">
-                    <IdCheck onImageUpload={this.onImageUpload} />
-                </Tab>
-                <Tab eventKey="bioId" title="BioID">
-                    <BioID onImageUpload={this.onImageUpload} onRestart={this.onRestart}/>
-                </Tab>
-            </Tabs>
+            <div>
+                <nav>
+                    <Link to="/address">
+                        <span style={{ margin: 10 }}>Address</span>
+                    </Link>
+                    <Link to="/idCheck">
+                        <span style={{ margin: 10 }}>Id Check</span>
+                    </Link>
+                    <Link to="/bioId">
+                        <span style={{ margin: 10 }}>BioId</span>
+                    </Link>
+                </nav>
+
+
+                <hr />
+                <Route path="/address" component={Address} />
+                <Route
+                    path="/idCheck"
+                    component={props => <IdCheck {...props} onImageUpload={this.onImageUpload} />}
+                />
+                <Route
+                    path="/bioId"
+                    component={props => <BioID {...props} onImageUpload={this.onImageUpload} onRestart={this.onRestart} />}
+                />
+            </div>
         );
     }
 }

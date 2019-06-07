@@ -7,6 +7,10 @@ export class IdCheck extends Component {
 
     constructor(props) {
         super(props);
+        if (window.microblinkInitialized) {
+            return; // there seems to be no way to remove listeners from microblink
+        }
+        window.microblinkInitialized = true;
         window.Microblink.SDK.SetEndpoint('/api/microblink');
         window.Microblink.SDK.SetRecognizers(['MRTD', 'FACE']);
 

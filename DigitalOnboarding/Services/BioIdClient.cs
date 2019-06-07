@@ -106,7 +106,7 @@ namespace DigitalOnboarding.Services
                 {
                     if (bool.TryParse(responseContent, out var parsed))
                     {
-                        return (new Result() { IsValid = parsed }, 200, "");
+                        return (new Result() { IsValid = parsed }, 200, responseContent);
                     }
                 }
                 return (null, (int)response.StatusCode, responseContent);

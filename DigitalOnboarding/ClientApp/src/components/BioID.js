@@ -77,26 +77,7 @@ export class BioID extends Component {
 
         /* ----------------- Set button functionality ------------------------------------------*/
 
-
-
         initialize();
-        /*
-        // set navigation for the buttons
-        //$('#uuicancel').attr('href', returnURL + '?error=user_abort&access_token=' + token + '&state=' + state);
-        $('#uuiskip').attr('href', returnURL + '?error=user_skip&access_token=' + token + '&state=' + state);
-
-        // set url for the BioID mobile app
-        if (task === 'verification') {
-            $('#uuimobileapp').attr('href', 'bioid-verify://?access_token=' + token + '&return_url=' + returnURL + '&state=' + state);
-        }
-        else if (task === 'enrollment') {
-            $('#uuimobileapp').attr('href', 'bioid-enroll://?access_token=' + token + '&return_url=' + returnURL + '&state=' + state);
-        }
-        
-        // hide button after first click
-        $('#uuimobileapp').click(function () {
-            $('#uuimobileapp').hide();
-        });*/
 
         // called from Start button and onStart to initiate a new recording
         function startRecording(countdown) {
@@ -154,18 +135,6 @@ export class BioID extends Component {
 
         // initialize - load content in specific language and initialize bws capture
         function initialize() {
-            /*
-            // change title if task is enrollment
-            if (task === 'enrollment') {
-                $('#uuititle').attr('data-res', 'titleEnrollment');
-            }
-            // change title if task is identification
-            else if (task === 'identification') {
-                $('#uuititle').attr('data-res', 'titleIdentification');
-            }
-            else if (task === 'livenessdetection') {
-                $('#uuititle').attr('data-res', 'titleLiveDetection');
-            }*/
 
             // try to get language info from the browser.
             let userLangAttribute = navigator.language || navigator.userLanguage || navigator.browserLanguage || 'en';
@@ -211,13 +180,6 @@ export class BioID extends Component {
                 $('#uuicanvas').show();
                 captureStarted();
             }, function (error) {
-                    /*
-                // show button for continue without biometrics (skip biometric task)
-                //$('#uuiskip').show();
-                // show button for BioID app (interapp communication)
-                if (task === 'verification' || task === 'enrollment') {
-                    $('#uuimobileapp').show();
-                }*/
                 if (error !== undefined) {
                     // different browsers use different errors
                     if (error.code === 1 || error.name === 'PermissionDeniedError') {
@@ -235,12 +197,12 @@ export class BioID extends Component {
                 // done
                 stopRecording(headGuide);
                 currentExecution++;
-
+                    me.props.onRestart();
                 if (error !== undefined && retry && currentExecution < executions) {
                     // if failed restart if retries are left, but wait a bit until the user has read the error message!
                     setTimeout(function () { startRecording(true); }, 1800);
                     console.log('Current Execution: ' + currentExecution);
-                    me.props.onRestart();
+                    
                 } else {
                     // done: redirect to caller ...
                     /*let url = returnURL + '?access_token=' + token;
@@ -266,18 +228,16 @@ export class BioID extends Component {
                     }
 
                     // css media query decision
-                    if ($('#uuisingleupload').is(':visible') == true) {
+                    if ($('#uuisingleupload').is(':visible')) {
                         $('#uuiprogress' + modId).show();
                         $('#uuiprogressbar' + modId).width(message.progress + '%');
                         // if the window size changed
                         $('#uuiprogresscompact').hide();
-                    }
-                    else {
+                    } else {
                         $('#uuiprogresscompact').show();
                         $('#uuiprogressbarcompact').width(progresscompact + '%');
                     }
-                }
-                else if (status === 'DisplayTag') {
+                } else if (status === 'DisplayTag') {
                     headGuide.setCurrentTag(message);
                     $msg = $('#uuiinstruction');
                     $msg.html(formatText('UserInstruction-FollowMe'));
@@ -306,8 +266,7 @@ export class BioID extends Component {
                             $('#uuiprogresscompact').hide();
                             $('#uuiprogressbarcompact').width(0);
                             headGuide.resetHeadDisplay();
-                        }
-                        else {
+                        } else {
                             $msg.html(msg);
                             $msg.stop(true).fadeIn();
                         }
@@ -410,7 +369,7 @@ export class BioID extends Component {
 
     render() {
         return (
-            <div>
+            <div className="uuimain">
                 <section id="uuisplash">
                     <div id="uuiprompt" className="prompt">
                         <p data-res="prompt"></p>
@@ -422,13 +381,13 @@ export class BioID extends Component {
                     <canvas id="uuicanvas" className="liveview"></canvas>
                     <div id="uuimessage" className="message"></div>
                     <div id="uuihead" className="head"></div>
-                    <a id="uuistart" className="startbutton" href="#"><img src="/uui/images/play.svg" className="button-big-grow" alt="start" title="Start the recording of images" data-res="buttonStart" /></a>
+                    <div id="uuistart" className="startbutton"><img src="/uui/images/play.svg" className="button-big-grow" alt="start" title="Start the recording of images" data-res="buttonStart" /></div>
                     <div id="uuisingleupload" className="uploadstatus-single">
 
                         <div id="uuiimage1" className="image">
                             <div id="uuiwait1" className="spinner spinner-wait"></div>
                             <div id="uuiupload1" className="spinner spinner-upload" data-res="uploadInfo">Uploading...</div>
-                            <img id="uuiuploaded1" className="image-uploaded" />
+                            <img id="uuiuploaded1" className="image-uploaded" alt=""/>
                             <div id="uuiprogress1" className="progress-single">
                                 <div id="uuiprogressbar1" className="progressbar"></div>
                             </div>
@@ -436,7 +395,7 @@ export class BioID extends Component {
                         <div id="uuiimage2" className="image">
                             <div id="uuiwait2" className="spinner spinner-wait"></div>
                             <div id="uuiupload2" className="spinner spinner-upload" data-res="uploadInfo">Uploading...</div>
-                            <img id="uuiuploaded2" className="image-uploaded" />
+                            <img id="uuiuploaded2" className="image-uploaded" alt=""/>
                             <div id="uuiprogress2" className="progress-single">
                                 <div id="uuiprogressbar2" className="progressbar"></div>
                             </div>
@@ -444,7 +403,7 @@ export class BioID extends Component {
                         <div id="uuiimage3" className="image">
                             <div id="uuiwait3" className="spinner spinner-wait"></div>
                             <div id="uuiupload3" className="spinner spinner-upload" data-res="uploadInfo">Uploading...</div>
-                            <img id="uuiuploaded3" className="image-uploaded" />
+                            <img id="uuiuploaded3" className="image-uploaded" alt=""/>
                             <div id="uuiprogress3" className="progress-single">
                                 <div id="uuiprogressbar3" className="progressbar"></div>
                             </div>
@@ -452,7 +411,7 @@ export class BioID extends Component {
                         <div id="uuiimage4" className="image">
                             <div id="uuiwait4" className="spinner spinner-wait"></div>
                             <div id="uuiupload4" className="spinner spinner-upload" data-res="uploadInfo">Uploading...</div>
-                            <img id="uuiuploaded4" className="image-uploaded" />
+                            <img id="uuiuploaded4" className="image-uploaded" alt=""/>
                             <div id="uuiprogress4" className="progress-single">
                                 <div id="uuiprogressbar4" className="progressbar"></div>
                             </div>
@@ -464,6 +423,7 @@ export class BioID extends Component {
                         </div>
                     </div>
                 </section>
+
             </div>
         );
     }

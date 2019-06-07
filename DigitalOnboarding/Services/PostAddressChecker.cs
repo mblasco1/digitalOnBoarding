@@ -42,9 +42,13 @@ namespace DigitalOnboarding.Services
                 });
 
                 var response = (await serviceProxy.AdrCheckerExterneAsync(request)).AdressCheckerResponse;
-                if (response.HasMoreRows || response.Rows.Count() != 1)
+                if (response.HasMoreRows || response.Rows == null || response.Rows.Count() != 1)
                 {
                     // TODO
+                    return new Result()
+                    {
+                        IsValid = false
+                    };
                 }
                 var responseRow = response.Rows[0];
                 return new Result()
