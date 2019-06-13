@@ -165,7 +165,6 @@ export class BioID extends Component {
                     } catch (e) {
                         console.log(e);
                         $('#uuierror').html(formatText('webgl-error'));
-                        //$('#uuiskip').show();
                     }
                 });
         }

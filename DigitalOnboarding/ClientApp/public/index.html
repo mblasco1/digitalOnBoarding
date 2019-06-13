@@ -36,26 +36,8 @@
     <!--
       microblink:
     -->
-    <script src="https://www.gstatic.com/firebasejs/5.7.2/firebase-app.js"></script>
-    <script src="https://www.gstatic.com/firebasejs/5.7.2/firebase-firestore.js"></script>
     <!--<script src="microblink/dist/microblink.js"></script>-->
     <script src="https://unpkg.com/microblink@0.4.1/dist/microblink.min.js"></script>
-    <script src="https://unpkg.com/qrcode@1.3.3/build/qrcode.min.js"></script>
-    <script>
-        var config = {
-            apiKey: "AIzaSyC2EeRiAwTGj4Gv28RVjYLkU_sUYLafCqg",
-            authDomain: "microblink-api-exchanger.firebaseapp.com",
-            databaseURL: "https://microblink-api-exchanger.firebaseio.com",
-            projectId: "microblink-api-exchanger",
-            storageBucket: "microblink-api-exchanger.appspot.com",
-            messagingSenderId: "902458803135"
-        };
-        firebase.initializeApp(config);
-
-        const firestore = firebase.firestore();
-        const settings = {/* your settings... */ timestampsInSnapshots: true };
-        firestore.settings(settings);
-    </script>
 </head>
   <body>
     <noscript>

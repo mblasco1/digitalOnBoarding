@@ -5,7 +5,9 @@ VisualStudioVersion = 16.0.28803.452
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "DigitalOnboarding", "DigitalOnboarding\DigitalOnboarding.csproj", "{5A6468AA-1C2E-4A92-A32F-9C0E4B6AA483}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "XUnitTest", "XUnitTest\XUnitTest.csproj", "{D9C954B2-01F0-49FB-B76E-7BB55C6BD65D}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "XUnitTest", "XUnitTest\XUnitTest.csproj", "{D9C954B2-01F0-49FB-B76E-7BB55C6BD65D}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "BioIdEvaluation", "BioIdEvaluation\BioIdEvaluation.csproj", "{67C31E47-0C57-4F67-BA17-83CC672546D1}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -21,6 +23,10 @@ Global
 		{D9C954B2-01F0-49FB-B76E-7BB55C6BD65D}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{D9C954B2-01F0-49FB-B76E-7BB55C6BD65D}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{D9C954B2-01F0-49FB-B76E-7BB55C6BD65D}.Release|Any CPU.Build.0 = Release|Any CPU
+		{67C31E47-0C57-4F67-BA17-83CC672546D1}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{67C31E47-0C57-4F67-BA17-83CC672546D1}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{67C31E47-0C57-4F67-BA17-83CC672546D1}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{67C31E47-0C57-4F67-BA17-83CC672546D1}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

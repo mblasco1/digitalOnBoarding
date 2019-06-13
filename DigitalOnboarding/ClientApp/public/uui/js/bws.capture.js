@@ -20,7 +20,7 @@
             maxupload: 20,
             challengeResponse: false,
             motionareaheight: 160,
-            threshold: 25,
+            threshold: /Mobi|Android/i.test(navigator.userAgent) ? 50 : 25, // simpler client-side implementation of https://github.com/BioID-GmbH/BWS-GUI/commit/22b8e27100861bacde6ac4ee149bcf9bbdb95e3c
             mirror: true
         };
 

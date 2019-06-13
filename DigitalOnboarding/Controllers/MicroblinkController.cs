@@ -13,10 +13,10 @@ namespace DigitalOnboarding.Controllers
     [ApiController]
     public class MicroblinkController : ControllerBase
     {
-        private static readonly HttpClient httpClient = new HttpClient();
         [HttpPost]
-        public async Task Execute()
+        public async Task Execute([FromServices] IHttpClientFactory httpClientFactory)
         {
+            var httpClient = httpClientFactory.CreateClient();
             using (var streamContent = new StreamContent(Request.Body))
             using (var requestMessage = new HttpRequestMessage(HttpMethod.Post, new Uri("https://api.microblink.com/recognize/execute")))
             {

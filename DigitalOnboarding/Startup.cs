@@ -22,9 +22,10 @@ namespace DigitalOnboarding
         public void ConfigureServices(IServiceCollection services)
         {
             services.AddSingleton<IAddressChecker, PostAddressChecker>();
-            services.AddSingleton<IBioIdClient, BioIdClient>();
+            services.AddHttpClient<IBioIdClient, BioIdClient>();
+            services.AddHttpClient();
 
-            services.AddDistributedMemoryCache();
+            /*services.AddDistributedMemoryCache();
 
             services.AddSession(options =>
             {
@@ -33,7 +34,7 @@ namespace DigitalOnboarding
                 options.Cookie.HttpOnly = true;
                 // Make the session cookie essential
                 options.Cookie.IsEssential = true;
-            });
+            });*/
 
             services.AddMvc().SetCompatibilityVersion(CompatibilityVersion.Version_2_1);
 
@@ -59,7 +60,7 @@ namespace DigitalOnboarding
 
             app.UseHttpsRedirection();
             app.UseStaticFiles();
-            app.UseSession();
+            //app.UseSession();
             app.UseSpaStaticFiles();
 
             app.UseMvc(routes =>

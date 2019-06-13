@@ -20,9 +20,9 @@ namespace DigitalOnboarding.Services
         private const string appSecret = "wgiVhwfNMoX6ZYlj1+lJNb5D";
         private const string apiUrl = "https://bws.bioid.com/extension/";
 
-        public BioIdClient()
+        public BioIdClient(HttpClient httpClient)
         {
-            httpClient = new HttpClient();
+            this.httpClient = httpClient;
             string credentials = Convert.ToBase64String(Encoding.GetEncoding("iso-8859-1").GetBytes($"{appID}:{appSecret}"));
             httpClient.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Basic", credentials);
         }
