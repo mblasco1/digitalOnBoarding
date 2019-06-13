@@ -39,6 +39,18 @@ export default class App extends Component {
                 this.liveimage2 = dataUrl;
             }
         }
+
+        fetch('/api/bioid/image', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify({
+                data: dataUrl
+            })
+        });
+
+
         if (this.idphoto && this.liveimage1 && this.liveimage2) {
             this.uploaded = true;
             let result = await fetch('/api/bioid/photoverify', {
@@ -53,6 +65,8 @@ export default class App extends Component {
                     accuracy: 1
                 })
             });
+
+            
             let response = await result.json()
             console.log("photoverify:", response);
             window.alert(result.status + ": " + JSON.stringify(response));
