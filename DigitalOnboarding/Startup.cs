@@ -1,7 +1,6 @@
 using DigitalOnboarding.Services;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
-using Microsoft.AspNetCore.HttpsPolicy;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.SpaServices.ReactDevelopmentServer;
 using Microsoft.Extensions.Configuration;
@@ -24,17 +23,6 @@ namespace DigitalOnboarding
             services.AddSingleton<IAddressChecker, PostAddressChecker>();
             services.AddHttpClient<IBioIdClient, BioIdClient>();
             services.AddHttpClient();
-
-            /*services.AddDistributedMemoryCache();
-
-            services.AddSession(options =>
-            {
-                // Set a short timeout for easy testing.
-                //options.IdleTimeout = TimeSpan.FromSeconds(10);
-                options.Cookie.HttpOnly = true;
-                // Make the session cookie essential
-                options.Cookie.IsEssential = true;
-            });*/
 
             services.AddMvc().SetCompatibilityVersion(CompatibilityVersion.Version_2_1);
 
@@ -60,7 +48,6 @@ namespace DigitalOnboarding
 
             app.UseHttpsRedirection();
             app.UseStaticFiles();
-            //app.UseSession();
             app.UseSpaStaticFiles();
 
             app.UseMvc(routes =>

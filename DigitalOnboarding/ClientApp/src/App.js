@@ -40,17 +40,6 @@ export default class App extends Component {
             }
         }
 
-        fetch('/api/bioid/image', {
-            method: 'POST',
-            headers: {
-                'Content-Type': 'application/json'
-            },
-            body: JSON.stringify({
-                data: dataUrl
-            })
-        });
-
-
         if (this.idphoto && this.liveimage1 && this.liveimage2) {
             this.uploaded = true;
             let result = await fetch('/api/bioid/photoverify', {
@@ -84,7 +73,7 @@ export default class App extends Component {
                         <span style={{ margin: 10 }}>Id Check</span>
                     </Link>
                     <Link to="/bioId">
-                        <span style={{ margin: 10 }}>BioId</span>
+                        <span style={{ margin: 10 }}>Liveness Check</span>
                     </Link>
                 </nav>
 
