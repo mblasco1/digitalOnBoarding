@@ -19,7 +19,7 @@ export class BioID extends Component {
         var recordings = response.recordings;
         var challengeResponse = response.challengeResponse;
         var challenges = JSON.parse(response.challengesJson);
-        var maxHeight = 320;
+        var maxHeight = 640;
         // END OF CONFIGURATION
 
 

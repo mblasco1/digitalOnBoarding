@@ -1,7 +1,8 @@
 {
   "profiles": {
     "BioIdEvaluation": {
-      "commandName": "Project"
+      "commandName": "Project",
+      "commandLineArgs": " | tee C:\\Users\\fas\\Desktop\\onboarding\\bioidImages\\output.txt"
     }
   }
 }

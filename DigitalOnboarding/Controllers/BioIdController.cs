@@ -55,7 +55,7 @@ namespace DigitalOnboarding.Controllers
         {
             string[] dataUrlParts = image.data.Split(',', 2);
             byte[] data = System.Convert.FromBase64String(dataUrlParts[1]);
-            string path = $@"C:\Users\fas\Desktop\onboarding\bioidImages\serverImages\{counter}.{(dataUrlParts[0].Contains("png")?"png":"jpeg")}";
+            string path = $@"C:\Users\fas\Desktop\onboarding\serverImages\{counter}.{(dataUrlParts[0].Contains("png")?"png":"jpeg")}";
             System.IO.File.WriteAllBytes(path, data);
             counter++;
             return Ok();

@@ -12,7 +12,7 @@ export class IdCheck extends Component {
         }
         window.microblinkInitialized = true;
         window.Microblink.SDK.SetEndpoint('/api/microblink');
-        window.Microblink.SDK.SetRecognizers(['MRTD', 'FACE']);
+        window.Microblink.SDK.SetRecognizers(['MRTD']);
 
         let me = this;
 
