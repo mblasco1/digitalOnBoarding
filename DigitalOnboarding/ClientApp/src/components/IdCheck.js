@@ -30,6 +30,7 @@ export class IdCheck extends Component {
                 console.log('Data from Microblink API is', data);
                 blobToDataURL(data.sourceBlob).then((dataUrl) => {
                     me.props.onImageUpload(dataUrl, "id");
+                    this.props.history.push('/livenessCheck');
                 });
             },
             onScanError: (error) => {

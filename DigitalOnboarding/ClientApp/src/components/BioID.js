@@ -196,7 +196,7 @@ export class BioID extends Component {
                 // done
                 stopRecording(headGuide);
                 currentExecution++;
-                    me.props.onRestart();
+                me.props.onRestart();
                 if (error !== undefined && retry && currentExecution < executions) {
                     // if failed restart if retries are left, but wait a bit until the user has read the error message!
                     setTimeout(function () { startRecording(true); }, 1800);

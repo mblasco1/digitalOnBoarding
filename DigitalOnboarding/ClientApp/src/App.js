@@ -13,6 +13,7 @@ export default class App extends Component {
         this.onImageUpload = this.onImageUpload.bind(this);
         this.onRestart = this.onRestart.bind(this);
         this.onTabSelect = this.onTabSelect.bind(this);
+        this.onAddressValidated = this.onAddressValidated.bind(this);
         this.state = {
             bioIdSelected: false
         };
@@ -26,6 +27,11 @@ export default class App extends Component {
         console.log("restarting...");
         this.liveimage1 = undefined;
         this.liveimage2 = undefined;
+    }
+
+    onAddressValidated(address) {
+        this.address = {};
+        address.forEach((value, key) => { this.address[key] = value });
     }
 
     async onImageUpload(dataUrl, type) {
@@ -68,24 +74,27 @@ export default class App extends Component {
                 <nav>
                     <Link to="/address">
                         <span style={{ margin: 10 }}>Address</span>
-                    </Link>
+                    </Link>&gt;
                     <Link to="/idCheck">
                         <span style={{ margin: 10 }}>Id Check</span>
-                    </Link>
-                    <Link to="/bioId">
+                    </Link>&gt;
+                    <Link to="/livenessCheck">
                         <span style={{ margin: 10 }}>Liveness Check</span>
                     </Link>
                 </nav>
 
 
                 <hr />
-                <Route path="/address" component={Address} />
+                <Route
+                    path="/address"
+                    component={props => <Address {...props} onAddressValidated={this.onAddressValidated} />}
+                />
                 <Route
                     path="/idCheck"
                     component={props => <IdCheck {...props} onImageUpload={this.onImageUpload} />}
                 />
                 <Route
-                    path="/bioId"
+                    path="/livenessCheck"
                     component={props => <BioID {...props} onImageUpload={this.onImageUpload} onRestart={this.onRestart} />}
                 />
             </div>

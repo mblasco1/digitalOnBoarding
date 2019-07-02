@@ -13,15 +13,19 @@ export class Address extends Component {
 
     async handleSubmit(event) {
         event.preventDefault();
-
+        let formData = new FormData(event.target);
         let response = await fetch('/api/address/verify', {
             method: 'POST',
-            body: new FormData(event.target)
+            body: formData
         });
-        let result = await response.json()
-        console.log(result);
 
-        this.setState({ validated: result.isValid, isValid:result.isValid });
+        let result = await response.json();
+        this.setState({ validated: result.isValid, isValid: result.isValid });
+
+        if (result.isValid) {
+            this.props.onAddressValidated(formData);
+            this.props.history.push('/idCheck');
+        }
     }
 
     render() {
