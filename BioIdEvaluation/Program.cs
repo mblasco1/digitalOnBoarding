@@ -13,7 +13,7 @@ namespace BioIdEvaluation
     {
         static void Main(string[] args)
         {
-            var path = @"C:\Users\fas\Desktop\onboarding\bioidImages";
+            var path = @"C:\Users\mar\Documents\onboarding\bioidImages";
             var client = new BioIdClient(new HttpClient());
             var dir = new DirectoryInfo(path);
             Console.WriteLine("genuine attempts:");
