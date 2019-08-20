@@ -46,7 +46,48 @@ export class IdCheck extends Component {
 
     render() {
         return (
-            <microblink-ui-web tabs autoscroll>
+			<microblink-ui-web tabs autoscroll>
+				<template className={localization json}>
+							{
+								"buttons": {
+								"browse": "Browse",
+							"cameraLocal": "Use web camera",
+							"cameraRemote": "Use remote phone camera",
+							"tryAgain": "TRY AGAIN",
+							"takePhoto": "TAKE A PHOTO",
+							"copy": "Copy to clipboard",
+							"confirm": "CONFIRM",
+							"retake": "RETAKE"
+						},
+					"labels": {
+								"dragDrop": "Drag and Drop\ndocument here OR",
+								"nativeCamera": "Choose image from \ndevice or camera app:",
+							"cameraActivate": "Activate your camera to capture the ID document:",
+							"errorMsg": "We're sorry, but something went wrong. Please try again.",
+							"notFoundErrorMsg": "No camera was found on your device.",
+							"notAllowedErrorMsg": "You have denied camera access permission.",
+								"permissionMsg": "Enable camera please",
+						"table": {
+								"keys": "Data field from the ID",
+							"values": "Value"
+						},
+						"uploading" : "Uploading",
+						"processing" : "Processing",
+						"analyzing" : "Analyzing",
+						"extracting" : "Extracting data",
+						"almostDone" : "Almost done",
+						"openLinkAtSmartphone": "Please open exchange link in the browser at smartphone.",
+						"generatingExchangeLink": "Generating exchange link...",
+						"exchangeLinkTitle": "Exchange link is"
+					},
+					"tabs": {
+								"retake": "RETAKE",
+							"results": "RESULTS",
+							"image": "IMAGE",
+							"json": "JSON"
+						}
+					}
+				</template>
             </microblink-ui-web>
         );
     }

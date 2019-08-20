@@ -24,18 +24,14 @@
   <ItemGroup>
     <!-- Don't publish the SPA source files, but do show them in the project files list -->
     <Compile Remove="ClientApp\public\bioid\**" />
-    <Compile Remove="ClientApp\src\NewFolder\**" />
     <Content Remove="$(SpaRoot)**" />
     <Content Remove="ClientApp\public\bioid\**" />
-    <Content Remove="ClientApp\src\NewFolder\**" />
     <None Include="$(SpaRoot)**" Exclude="$(SpaRoot)node_modules\**" />
   </ItemGroup>
 
   <ItemGroup>
     <EmbeddedResource Remove="ClientApp\public\bioid\**" />
-    <EmbeddedResource Remove="ClientApp\src\NewFolder\**" />
     <None Remove="ClientApp\public\bioid\**" />
-    <None Remove="ClientApp\src\NewFolder\**" />
   </ItemGroup>
 
   <ItemGroup>

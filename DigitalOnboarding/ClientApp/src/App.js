@@ -71,7 +71,8 @@ export default class App extends Component {
     render() {
         return (
             <div>
-                <nav>
+				<nav>
+					DINI MUETTER
                     <Link to="/address">
                         <span style={{ margin: 10 }}>Address</span>
                     </Link>&gt;
