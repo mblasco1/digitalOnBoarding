@@ -10,5 +10,8 @@
 	'idPhotoFront': '',
 	'idPhotoFrontMicroblinkObject': null,
 	'idPhotoBack': '',
-	'idPhotoBackMicroblinkObject': null
+	'idPhotoBackMicroblinkObject': null,
+	'livenessDetectionFirstPicture': '',
+	'livenessDetectionSecondPicture': '',
+	'BioIdLivenssObject': null
 };

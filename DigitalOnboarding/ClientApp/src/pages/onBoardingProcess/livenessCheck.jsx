@@ -50,6 +50,8 @@ const LivenessCheck = (props) => {
 	var  recordings = null;
 	var  challengeResponse = null;
 	var challenges = null;
+	var processInterval = null;
+	var sendEvent = null;
 	//var returnURL = '/';
 	//var state = response.state;
 
@@ -115,7 +117,7 @@ const LivenessCheck = (props) => {
 		copy.translate(canvasContainer.current.width, 0);
 		copy.scale(-1, 1);
 		// set an interval-timer to grab about 20 frames per second
-		let processInterval = setInterval(processFrame, 50);
+		processInterval = setInterval(processFrame, 500);
 	}
 
 	const processFrame = () => {
@@ -144,7 +146,7 @@ const LivenessCheck = (props) => {
 					img2Container.current.src = canvasContainer.current.toDataURL();
 					console.log('captured second image');
 					//$(image2).show();
-					setTimeout(sendImages);
+					sendEvent = setTimeout(sendImages);
 				}
 			} else {
 				// use as template
@@ -165,11 +167,12 @@ const LivenessCheck = (props) => {
 		formData.append('image1', img1Container.current.src);
 		formData.append('image2', img2Container.current.src);
 		$.ajax({
-			url: '/livedetection/process',
+			url: apiurl + 'upload?tag=any&trait=' + trait,
 			type: 'POST',
 			contentType: false,
 			processData: false,
 			data: formData,
+			headers: { 'Authorization': 'Bearer ' + token },
 			xhr: function () {
 				let jqxhr = $.ajaxSettings.xhr();
 				if (jqxhr.upload) {
@@ -183,12 +186,39 @@ const LivenessCheck = (props) => {
 		}).done(function (data, textStatus, jqXHR) {
 			console.log('upload succeeded');
 			console.log(data);
+			if (data.Accepted) {
+
+				console.log(sendEvent);
+				console.log(processInterval);
+
+				clearTimeout(sendEvent);
+				clearInterval(processInterval);
+				video.pause();
+
+				if (img1Container.current != null) {
+					onBoardingObject.phoneNumber = props.location.state.phoneNumber;
+					onBoardingObject.name = props.location.state.name;
+					onBoardingObject.street = props.location.state.street;
+					onBoardingObject.streetnumber = props.location.state.streetnumber;
+					onBoardingObject.city = props.location.state.city;
+					onBoardingObject.zip = props.location.state.zip;
+					onBoardingObject.email = props.location.state.email;
+					onBoardingObject.nationality = props.location.state.nationality;
+					onBoardingObject.idPhotoFront = props.location.state.idPhotoFront;
+					onBoardingObject.idPhotoFrontMicroblinkObject = props.location.state.idPhotoFrontMicroblinkObject;
+					onBoardingObject.idPhotoBack = props.location.state.idPhotoBack;
+					onBoardingObject.idPhotoBackMicroblinkObject = props.location.state.idPhotoBackMicroblinkObject;
+					onBoardingObject.BioIdLivenssObject = data;
+					onBoardingObject.livenessDetectionFirstPicture = img1Container.current.src;
+					onBoardingObject.livenessDetectionSecondPicture = img2Container.current.src;
+
+					props.history.push('/onboarding/livenesscheckoverview', onBoardingObject);
+				}
+			}
 			//$('#result').html(data);
 		}).fail(function (jqXHR, textStatus, errorThrown) {
-			console.log('upload failed:', textStatus, errorThrown, jqXHR.responseText);
-			$('#result').html('<div class="row mt-3"><div class="col"><pre class="text-danger">' + jqXHR.responseText + '</pre></div></div>');
+			//console.log('upload failed:', textStatus, errorThrown, jqXHR.responseText);
 		}).always(function () {
-			console.log('hiding modal');
 			//$('#progressDialog').modal('hide');
 			//$('#capture').prop('disabled', false);
 			//$('html, body').animate({ scrollTop: $(document).height() }, 'slow');
@@ -304,7 +334,7 @@ const LivenessCheck = (props) => {
 
 	return (
 		<React.Fragment>
-			<TitleSection title="Selfie & Lifeness Check" Icon={LivenessIcon} subtitle="Drehe bitte dein Gesicht zwischen beiden Aufnahmen" />
+			<TitleSection title="Selfie & Liveness Check" Icon={LivenessIcon} subtitle="Drehe bitte dein Gesicht zwischen beiden Aufnahmen" />
 			<div className={classes.actionSection}>
 				<canvas ref={canvasContainer} width={600} height={450} />
 				<Fab onClick={nextStep} aria-label="arrow" className={classes.fab}>

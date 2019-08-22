@@ -48,6 +48,7 @@ const IdScanFront = (props) => {
 		props.setStep(2);
 
 		if (window.microblinkInitialized) {
+			console.log('is already registered');
 			return; // there seems to be no way to remove listeners from microblink
 		}
 
@@ -68,14 +69,16 @@ const IdScanFront = (props) => {
 					onBoardingObject.nationality = props.location.state.nationality;
 
 					//since we cant unregister from the events and we use it two places....
-					if (props.location.pathname.indexOf('idscanfront') !== -1) {
-						console.log('we are at scan front');
-						console.log(props.location.pathname);
+					if (props.location.state.idPhotoFrontMicroblinkObject === null) {
 						onBoardingObject.idPhotoFront = dataUrl;
 						onBoardingObject.idPhotoFrontMicroblinkObject = data;
 						props.history.push('/onboarding/idscanfrontconfermation', onBoardingObject);
-					} else if (props.location.pathname.indexOf('idscanback') !== -1) {
-						console.log('we are at scan back');
+					} else {
+						onBoardingObject.idPhotoFront = props.location.state.idPhotoFront;
+						onBoardingObject.idPhotoFrontMicroblinkObject = props.location.state.idPhotoFrontMicroblinkObject;
+						onBoardingObject.idPhotoBack = dataUrl;
+						onBoardingObject.idPhotoBackMicroblinkObject = data;
+						props.history.push('/onboarding/idscanbackconfermation', onBoardingObject);
 					}
 
 					

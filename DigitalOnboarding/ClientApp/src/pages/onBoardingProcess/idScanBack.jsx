@@ -47,6 +47,7 @@ const IdScanBack = (props) => {
 		props.setStep(2);
 
 		if (window.microblinkInitialized) {
+			console.log('is already registered');
 			return; // there seems to be no way to remove listeners from microblink
 		}
 
@@ -54,14 +55,9 @@ const IdScanBack = (props) => {
 		window.Microblink.SDK.SetEndpoint('/api/microblink');
 		window.Microblink.SDK.SetRecognizers(['MRTD']);
 
-
 		window.Microblink.SDK.RegisterListener({
 			onScanSuccess: (data) => {
-
-				console.log('Data from Microblink API is', data);
-
 				blobToDataURL(data.sourceBlob).then((dataUrl) => {
-					console.log('the right listener called');
 					onBoardingObject.phoneNumber = props.location.state.phoneNumber;
 					onBoardingObject.name = props.location.state.name;
 					onBoardingObject.street = props.location.state.street;
@@ -72,17 +68,19 @@ const IdScanBack = (props) => {
 					onBoardingObject.nationality = props.location.state.nationality;
 
 					//since we cant unregister from the events and we use it two places....
-					if (props.location.pathname.indexOf('idscanfront') !== -1) {
+					if (props.location.state.idPhotoFrontMicroblinkObject === null) {
 						onBoardingObject.idPhotoFront = dataUrl;
 						onBoardingObject.idPhotoFrontMicroblinkObject = data;
 						props.history.push('/onboarding/idscanfrontconfermation', onBoardingObject);
-					} else if (props.location.pathname.indexOf('idscanback') !== -1) {
+					} else {
 						onBoardingObject.idPhotoFront = props.location.state.idPhotoFront;
 						onBoardingObject.idPhotoFrontMicroblinkObject = props.location.state.idPhotoFrontMicroblinkObject;
 						onBoardingObject.idPhotoBack = dataUrl;
 						onBoardingObject.idPhotoBackMicroblinkObject = data;
 						props.history.push('/onboarding/idscanbackconfermation', onBoardingObject);
 					}
+
+
 				});
 			},
 			onScanError: (error) => {
@@ -104,31 +102,6 @@ const IdScanBack = (props) => {
 			reader.onload = (e) => fulfill(reader.result);
 			reader.readAsDataURL(blob);
 		});
-
-
-		//can be refactored and splitted betweend biodid and microblink views
-		var onImageUpload = async function (dataUrl, type) {
-			if (this.idphoto && this.liveimage1 && this.liveimage2) {
-				this.uploaded = true;
-				let result = await fetch('/api/bioid/photoverify', {
-					method: 'POST',
-					headers: {
-						'Content-Type': 'application/json'
-					},
-					body: JSON.stringify({
-						idphoto: this.idphoto,
-						liveimage1: this.liveimage1,
-						liveimage2: this.liveimage2,
-						accuracy: 1
-					})
-				});
-
-
-				let response = await result.json()
-				console.log("photoverify:", response);
-				window.alert(result.status + ": " + JSON.stringify(response));
-			}
-		}
 	}
 
 	return (
