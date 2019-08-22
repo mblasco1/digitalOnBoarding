@@ -15,6 +15,7 @@ import IdScanBackConfermation from "./idScanBackConfermation";
 import LivenessCheck from './livenessCheck';
 import LivenessCheckOverview from './livenessCheckOverview';
 import Thanks from "./thanks";
+import ThanksOverview from "./thanksOverview";
 
 const styles = theme => ({
 	layout: {
@@ -49,6 +50,7 @@ const OnBoardingStart = (props) => {
             <Route path="/onBoarding/livenessCheck" render={routeProps => (<LivenessCheck {...routeProps} goToNextStep={props.nextStep} setStep={props.setStep} />)} />
             <Route path="/onBoarding/livenessCheckOverview" render={routeProps => (<LivenessCheckOverview {...routeProps} goToNextStep={props.nextStep} setStep={props.setStep} />)} />
             <Route path="/onBoarding/thanks" render={routeProps => (<Thanks {...routeProps} goToNextStep={props.nextStep} setStep={props.setStep} />)} />
+            <Route path="/onBoarding/thanksOverview" render={routeProps => (<ThanksOverview {...routeProps} goToNextStep={props.nextStep} setStep={props.setStep} />)} />
 		</Switch>
 	);
 

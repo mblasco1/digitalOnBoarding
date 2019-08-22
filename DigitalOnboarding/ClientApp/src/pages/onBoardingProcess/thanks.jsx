@@ -1,6 +1,6 @@
 ﻿//import libs
 import React, { useEffect } from "react";
-import { withStyles, Typography, Icon} from "@material-ui/core";
+import { withStyles, Typography} from "@material-ui/core";
 import Fab from "@material-ui/core/Fab";
 import ArrowIcon from "@material-ui/icons/ArrowForward";
 
@@ -33,7 +33,7 @@ const styles = theme => ({
 });
 
 const Thanks = (props) => {
-    const { classes, Icon } = props;
+    const { classes } = props;
 
     console.log(props);
 
