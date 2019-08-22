@@ -13,6 +13,7 @@ import IdScanFrontConfermation from "./idScanFrontConfermation";
 import IdScanBack from "./idScanBack";
 import IdScanBackConfermation from "./idScanBackConfermation";
 import Thanks from "./thanks";
+import LivenessCheck from './livenessCheck';
 
 const styles = theme => ({
 	layout: {
@@ -35,13 +36,6 @@ const styles = theme => ({
 
 const OnBoardingStart = (props) => {
 
-	useEffect(() => {
-		window.onpopstate = (e) => {
-			console.log('back button clicked');
-			console.log(props);
-		}
-
-	});
 	return (
 		<Switch>
 			{/* if path not found welcome page will be displayed  */}
@@ -50,7 +44,8 @@ const OnBoardingStart = (props) => {
 			<Route path="/onBoarding/idscanfront" render={routeProps => (<IdScanFront {...routeProps} goToNextStep={props.nextStep} setStep={props.setStep} />)} />
 			<Route path="/onBoarding/idscanfrontconfermation" render={routeProps => (<IdScanFrontConfermation {...routeProps} goToNextStep={props.nextStep} setStep={props.setStep} />)} />
 			<Route path="/onBoarding/idscanback" render={routeProps => (<IdScanBack {...routeProps} goToNextStep={props.nextStep} setStep={props.setStep} />)} />
-            <Route path="/onBoarding/idscanbackconfermation" render={routeProps => (<IdScanBackConfermation {...routeProps} goToNextStep={props.nextStep} setStep={props.setStep} />)} />
+			<Route path="/onBoarding/idscanbackconfermation" render={routeProps => (<IdScanBackConfermation {...routeProps} goToNextStep={props.nextStep} setStep={props.setStep} />)} />
+			<Route path="/onBoarding/livenessCheck" render={routeProps => (<LivenessCheck {...routeProps} goToNextStep={props.nextStep} setStep={props.setStep} />)} />
             <Route path="/onBoarding/thanks" render={routeProps => (<Thanks {...routeProps} goToNextStep={props.nextStep} setStep={props.setStep} />)} />
 		</Switch>
 	);

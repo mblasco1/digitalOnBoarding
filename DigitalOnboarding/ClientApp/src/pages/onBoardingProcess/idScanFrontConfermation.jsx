@@ -1,5 +1,5 @@
 ﻿//import libs
-import React, { useEffect } from "react";
+import React, { useEffect, useRef } from "react";
 import { withStyles } from "@material-ui/core";
 import Fab from "@material-ui/core/Fab";
 import ArrowIcon from "@material-ui/icons/ArrowForward";
@@ -23,20 +23,37 @@ const styles = theme => ({
 
 const IdScanFrontConfermation = (props) => {
 	const { classes } = props;
+	const canvasContainer = useRef(null);
 
 	useEffect(() => {
 		props.setStep(2);
+
+		var imgObject = new Image();
+		imgObject.src = props.location.state.idPhotoFront; 
+		const canvas = canvasContainer;
+		const ctx = canvas.current.getContext("2d");
+
+		imgObject.onload = () => {
+			//slice image - drawImage( image, source_x, source_y, w, h, dest_x, dest_y, w, h );
+			//replace with microblink object as soon as they support swiss ID's
+			ctx.drawImage(imgObject, 345, 190, 580, 355, 0, 0, 580, 355);
+		}
+
+
 	}, []);
 
 	const nextStep = () => {
-		props.history.push("/onBoarding/idscanback", onBoardingObject);
+		props.history.push("/onBoarding/idscanback", props.location.state);
 	}
+
+	const Picture = ({ data }) => <img src={data} height="550" />
 
 	return (
 		<React.Fragment>
 			<TitleSection title="ID Vorderseite" Icon={ScanIcon} subtitle="Die Vorderseite wurde erfolgreich gescannt" />
 			<div className={classes.actionSection}>
-
+				{/*<Picture data={props.location.state.idPhotoFront} /> */}
+				<canvas ref={canvasContainer} width={600} height={360} />
 				<Fab onClick={nextStep} aria-label="arrow" className={classes.fab}>
 					<ArrowIcon color='primary' />
 				</Fab>

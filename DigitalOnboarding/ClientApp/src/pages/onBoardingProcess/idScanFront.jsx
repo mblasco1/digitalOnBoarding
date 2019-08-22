@@ -10,6 +10,7 @@ import onBoardingObject from "../../resources/onBoardingObject";
 import TitleSection from "./components/_titleSection";
 
 
+
 const styles = theme => ({
 	actionSection: {
 		marginTop: 50,
@@ -38,7 +39,7 @@ const styles = theme => ({
 	}
 });
 
-const PhoneNumber = (props) => {
+const IdScanFront = (props) => {
 	const { classes } = props;
 
 	console.log(props);
@@ -54,14 +55,9 @@ const PhoneNumber = (props) => {
 		window.Microblink.SDK.SetEndpoint('/api/microblink');
 		window.Microblink.SDK.SetRecognizers(['MRTD']);
 
-
 		window.Microblink.SDK.RegisterListener({
 			onScanSuccess: (data) => {
-
-				console.log('Data from Microblink API is', data);
-
 				blobToDataURL(data.sourceBlob).then((dataUrl) => {
-
 					onBoardingObject.phoneNumber = props.location.state.phoneNumber;
 					onBoardingObject.name = props.location.state.name;
 					onBoardingObject.street = props.location.state.street;
@@ -70,10 +66,19 @@ const PhoneNumber = (props) => {
 					onBoardingObject.zip = props.location.state.zip;
 					onBoardingObject.email = props.location.state.email;
 					onBoardingObject.nationality = props.location.state.nationality;
-					onBoardingObject.idPhotoFront = dataUrl;
-					onBoardingObject.idPhotoFrontMicroblinkObject = data;
 
-					props.history.push('/onboarding/idscanfrontconfermation', onBoardingObject);
+					//since we cant unregister from the events and we use it two places....
+					if (props.location.pathname.indexOf('idscanfront') !== -1) {
+						console.log('we are at scan front');
+						console.log(props.location.pathname);
+						onBoardingObject.idPhotoFront = dataUrl;
+						onBoardingObject.idPhotoFrontMicroblinkObject = data;
+						props.history.push('/onboarding/idscanfrontconfermation', onBoardingObject);
+					} else if (props.location.pathname.indexOf('idscanback') !== -1) {
+						console.log('we are at scan back');
+					}
+
+					
 				});
 			},
 			onScanError: (error) => {
@@ -126,7 +131,7 @@ const PhoneNumber = (props) => {
 		<React.Fragment>
 			<TitleSection title="ID Vorderseite" Icon={ScanIcon} subtitle="Bitte die Vorderseite Ihrer ID scannen" />
 			<div className={classes.actionSection}>
-				<microblink-ui-web class={classes.microblinkContainer} tabs autoscroll>
+					<microblink-ui-web class={classes.microblinkContainer} tabs autoscroll>
 						<img slot="loader-image" class="hide-until-component-is-loaded" src="https://microblink.com/bundles/microblinkmicroblink/images/loading-animation-on-blue.gif" />
 						<span slot="labels.openLinkAtSmartphone" class="hide-until-component-is-loaded"  >Please open <b>exchange link</b> at the smartphone with <b>QR</b> reader.</span>
 					</microblink-ui-web>
@@ -134,4 +139,4 @@ const PhoneNumber = (props) => {
 		</React.Fragment>
 	);
 }
-export default withStyles(styles)(PhoneNumber);
+export default withStyles(styles)(IdScanFront);
