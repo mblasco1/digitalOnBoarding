@@ -121,7 +121,7 @@ const Thanks = (props) => {
     }, []);
 
     const nextStep = () => {
-        props.history.push("/onBoarding/thanksOverview", onBoardingObject);
+        props.history.push("/onBoarding/signContract", onBoardingObject);
     }
 
     return (
