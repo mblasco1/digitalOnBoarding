@@ -42,17 +42,17 @@ const OnBoardingStart = (props) => {
 	return (
 		<Switch>
 			{/* if path not found welcome page will be displayed  */}
-			<Route path="/onBoarding/phonenumber" render={routeProps => (<Phonenumber {...routeProps} goToNextStep={props.nextStep} setStep={props.setStep} />)} />
-			<Route path="/onBoarding/identification" render={routeProps => (<Identification {...routeProps} goToNextStep={props.nextStep} setStep={props.setStep} />)} />
-			<Route path="/onBoarding/idscanfront" render={routeProps => (<IdScanFront {...routeProps} goToNextStep={props.nextStep} setStep={props.setStep} />)} />
-			<Route path="/onBoarding/idscanfrontconfermation" render={routeProps => (<IdScanFrontConfermation {...routeProps} goToNextStep={props.nextStep} setStep={props.setStep} />)} />
-			<Route path="/onBoarding/idscanback" render={routeProps => (<IdScanBack {...routeProps} goToNextStep={props.nextStep} setStep={props.setStep} />)} />
-			<Route path="/onBoarding/idscanbackconfermation" render={routeProps => (<IdScanBackConfermation {...routeProps} goToNextStep={props.nextStep} setStep={props.setStep} />)} />
-            <Route path="/onBoarding/livenessCheck" render={routeProps => (<LivenessCheck {...routeProps} goToNextStep={props.nextStep} setStep={props.setStep} />)} />
-            <Route path="/onBoarding/livenessCheckOverview" render={routeProps => (<LivenessCheckOverview {...routeProps} goToNextStep={props.nextStep} setStep={props.setStep} />)} />
-            <Route path="/onBoarding/thanks" render={routeProps => (<Thanks {...routeProps} goToNextStep={props.nextStep} setStep={props.setStep} />)} />
-            <Route path="/onBoarding/thanksOverview" render={routeProps => (<ThanksOverview {...routeProps} goToNextStep={props.nextStep} setStep={props.setStep} />)} />
-            <Route path="/onBoarding/signContract" render={routeProps => (<SignContract {...routeProps} goToNextStep={props.nextStep} setStep={props.setStep} />)} />
+			<Route path="/onBoarding/phonenumber" render={routeProps => (<Phonenumber {...routeProps} showSuccessSnack={props.showSuccessSnack} goToNextStep={props.nextStep} setStep={props.setStep} />)} />
+			<Route path="/onBoarding/identification" render={routeProps => (<Identification {...routeProps} showSuccessSnack={props.showSuccessSnack} goToNextStep={props.nextStep} setStep={props.setStep} />)} />
+			<Route path="/onBoarding/idscanfront" render={routeProps => (<IdScanFront {...routeProps} showSuccessSnack={props.showSuccessSnack} goToNextStep={props.nextStep} setStep={props.setStep} />)} />
+			<Route path="/onBoarding/idscanfrontconfermation" render={routeProps => (<IdScanFrontConfermation showSuccessSnack={props.showSuccessSnack} {...routeProps} goToNextStep={props.nextStep} setStep={props.setStep} />)} />
+			<Route path="/onBoarding/idscanback" render={routeProps => (<IdScanBack {...routeProps} showSuccessSnack={props.showSuccessSnack} goToNextStep={props.nextStep} setStep={props.setStep} />)} />
+			<Route path="/onBoarding/idscanbackconfermation" render={routeProps => (<IdScanBackConfermation showSuccessSnack={props.showSuccessSnack} {...routeProps} goToNextStep={props.nextStep} setStep={props.setStep} />)} />
+			<Route path="/onBoarding/livenessCheck" render={routeProps => (<LivenessCheck {...routeProps} showSuccessSnack={props.showSuccessSnack} goToNextStep={props.nextStep} setStep={props.setStep} />)} />
+			<Route path="/onBoarding/livenessCheckOverview" render={routeProps => (<LivenessCheckOverview {...routeProps} showSuccessSnack={props.showSuccessSnack} goToNextStep={props.nextStep} setStep={props.setStep} />)} />
+			<Route path="/onBoarding/thanks" render={routeProps => (<Thanks {...routeProps} goToNextStep={props.nextStep} showSuccessSnack={props.showSuccessSnack} setStep={props.setStep} />)} />
+			<Route path="/onBoarding/thanksOverview" render={routeProps => (<ThanksOverview {...routeProps} showSuccessSnack={props.showSuccessSnack} goToNextStep={props.nextStep} setStep={props.setStep} />)} />
+			<Route path="/onBoarding/signContract" render={routeProps => (<SignContract {...routeProps} showSuccessSnack={props.showSuccessSnack} goToNextStep={props.nextStep} setStep={props.setStep} />)} />
 		</Switch>
 	);
 

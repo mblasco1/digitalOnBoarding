@@ -6,10 +6,10 @@ import ArrowIcon from "@material-ui/icons/ArrowForward";
 
 //import resources
 import { ReactComponent as ScanIcon } from "../../images/idScanIcon.svg";
-import onBoardingObject from "../../resources/onBoardingObject";
 
 //import components
 import TitleSection from "./components/_titleSection";
+import { onBoardingObject, onBoardingUtilities } from "../../resources/onBoardingObject";
 
 
 const styles = theme => ({
@@ -17,46 +17,70 @@ const styles = theme => ({
 		marginLeft: 210,
 		justifyContent: 'center',
 		display: 'flex',
-		flexDirection: 'column'
+		flexDirection: 'column',
 	}
 });
 
 const IdScanFrontConfermation = (props) => {
-	const { classes } = props;
+	const { classes, setStep } = props;
 	const canvasContainer = useRef(null);
 
 	useEffect(() => {
-		props.setStep(2);
+		setStep(2);
 
 		var imgObject = new Image();
-		imgObject.src = props.location.state.idPhotoFront; 
-		const canvas = canvasContainer;
-		const ctx = canvas.current.getContext("2d");
+		imgObject.src = props.location.state.idPhotoFront;
+		const ctx = canvasContainer.current.getContext("2d");
 
 		imgObject.onload = () => {
-			//slice image - drawImage( image, source_x, source_y, w, h, dest_x, dest_y, w, h );
 			//replace with microblink object as soon as they support swiss ID's
-			ctx.drawImage(imgObject, 345, 190, 580, 355, 0, 0, 580, 355);
+			//slice image to card - drawImage( image, source_x, source_y, w, h, dest_x, dest_y, w, h );
+			ctx.drawImage(imgObject, 115, 105, 420, 260, 0, 0, 390, 250);
+			canvasContainer.current.toBlob(getCardImage, 'image/jpeg');
 		}
-
 
 	}, []);
 
-	const nextStep = () => {
-		props.history.push("/onBoarding/idscanback", props.location.state);
+	const getCardImage = (blob) => {
+
+		blobToDataURL(blob).then((dataUrl) => {
+			onBoardingUtilities.copyFromObject(onBoardingObject, props.location.state);
+			onBoardingObject.idPhotoFrontMinimized = dataUrl;
+		});
+
 	}
 
-	const Picture = ({ data }) => <img src={data} height="550" />
+	const nextStep = () => {
+
+		if (onBoardingObject.idPhotoFrontMinimized !== null) {
+			//not needed anymore, remove unnecessary load
+			onBoardingObject.idPhotoFront = null;
+			props.history.push('/onboarding/idscanback', onBoardingObject);
+		}
+		//props.history.push("/onBoarding/idscanback", props.location.state);
+	}
+
+	const blobToDataURL = (blob) => {
+		return new Promise((fulfill, reject) => {
+			let reader = new FileReader();
+			reader.onerror = reject;
+			reader.onload = (e) => fulfill(reader.result);
+			reader.readAsDataURL(blob);
+		});
+	}
 
 	return (
 		<React.Fragment>
 			<TitleSection title="ID Vorderseite" Icon={ScanIcon} subtitle="Die Vorderseite wurde erfolgreich gescannt" />
 			<div className={classes.actionSection}>
-				{/*<Picture data={props.location.state.idPhotoFront} /> */}
-				<canvas ref={canvasContainer} width={600} height={360} />
-				<Fab onClick={nextStep} aria-label="arrow" className={classes.fab}>
-					<ArrowIcon color='primary' />
-				</Fab>
+				<div>
+					<canvas ref={canvasContainer} classes={classes.mirrored} width={390} height={250} />
+				</div>
+				<div>
+					<Fab onClick={nextStep} aria-label="arrow" className={classes.fab}>
+						<ArrowIcon color='primary' />
+					</Fab>
+				</div>
 			</div>
 		</React.Fragment>
 	);

@@ -1,19 +1,20 @@
 ﻿//import libs
-import React, { useState, useEffect } from "react";
+import React, { useEffect } from "react";
 import { withStyles } from "@material-ui/core";
 
 //import resources
 import { ReactComponent as ScanIcon } from "../../images/idScanIcon.svg";
-import onBoardingObject from "../../resources/onBoardingObject";
+import { onBoardingObject, onBoardingUtilities } from "../../resources/onBoardingObject";
 
 //import components
 import TitleSection from "./components/_titleSection";
 
 
-const styles = theme => ({
+const styles = () => ({
 	actionSection: {
 		marginTop: 50,
-		height: 450
+		height: 480,
+		width: 640
 	},
 	microblinkContainer: {
 		'--mb-widget-font-family': 'Roboto',
@@ -39,15 +40,12 @@ const styles = theme => ({
 });
 
 const IdScanBack = (props) => {
-	const { classes } = props;
-
-	console.log(props);
+	const { classes, setStep } = props;
 
 	useEffect(() => {
-		props.setStep(2);
+		setStep(2);
 
 		if (window.microblinkInitialized) {
-			console.log('is already registered');
 			return; // there seems to be no way to remove listeners from microblink
 		}
 
@@ -58,35 +56,20 @@ const IdScanBack = (props) => {
 		window.Microblink.SDK.RegisterListener({
 			onScanSuccess: (data) => {
 				blobToDataURL(data.sourceBlob).then((dataUrl) => {
-					onBoardingObject.phoneNumber = props.location.state.phoneNumber;
-					onBoardingObject.name = props.location.state.name;
-					onBoardingObject.street = props.location.state.street;
-					onBoardingObject.streetnumber = props.location.state.streetnumber;
-					onBoardingObject.city = props.location.state.city;
-					onBoardingObject.zip = props.location.state.zip;
-					onBoardingObject.email = props.location.state.email;
-					onBoardingObject.nationality = props.location.state.nationality;
 
-					//since we cant unregister from the events and we use it two places....
-					if (props.location.state.idPhotoFrontMicroblinkObject === null) {
-						onBoardingObject.idPhotoFront = dataUrl;
-						onBoardingObject.idPhotoFrontMicroblinkObject = data;
-						props.history.push('/onboarding/idscanfrontconfermation', onBoardingObject);
-					} else {
-						onBoardingObject.idPhotoFront = props.location.state.idPhotoFront;
-						onBoardingObject.idPhotoFrontMicroblinkObject = props.location.state.idPhotoFrontMicroblinkObject;
-						onBoardingObject.idPhotoBack = dataUrl;
-						onBoardingObject.idPhotoBackMicroblinkObject = data;
-						props.history.push('/onboarding/idscanbackconfermation', onBoardingObject);
-					}
+					onBoardingUtilities.copyFromObject(onBoardingObject, props.location.state);
 
+					onBoardingObject.idPhotoBack = dataUrl;
+					onBoardingObject.idPhotoBackMicroblinkObject = data;
+
+					props.history.push('/onboarding/idscanbackconfermation', onBoardingObject);
 
 				});
 			},
 			onScanError: (error) => {
 				console.error('Error from Microblink API is', error);
 
-				// Display push notfication error
+				//ToDo: smarter error message
 				if (error.summary) {
 					alert(error.summary);
 				}

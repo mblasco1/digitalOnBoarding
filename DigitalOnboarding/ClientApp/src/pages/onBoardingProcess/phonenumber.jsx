@@ -8,7 +8,7 @@ import ArrowIcon from "@material-ui/icons/ArrowForward";
 
 //import resources
 import { ReactComponent as PhoneIcon } from "../../images/phoneIcon.svg";
-import onBoardingObject from "../../resources/onBoardingObject";
+import { onBoardingObject } from "../../resources/onBoardingObject";
 
 //import components
 import TitleSection from "./components/_titleSection";
@@ -27,15 +27,15 @@ const styles = theme => ({
 });
 
 const PhoneNumber = (props) => {
-	const { classes } = props;
+	const { classes, setStep } = props;
 
 	//ToDo: refactor validation to a generic validation class
 	const [phoneValidation, setPhoneValidation] = useState({
-		'phone': { 'value': '', 'isValid': false, 'type': 'required, regex', 'regexExpression': '^(0|0041|\\+41)?[1-9\\s][0-9\\s]{1,12}$', 'message': '', 'messageRequired': 'Bitte Telefonnummer eingeben', 'messageRegex': 'Telefonnummer ist ungültig', 'touched': false }
+		'phone': { 'value': '', 'isValid': false, 'type': 'required, regex', 'minlength': 10, 'minlengthMessage': 'Telefonnummer ist ungültig', 'regexExpression': '^(\\+41|0041|0)\\s?(\\d{2})\\s?(\\d{3})\\s?(\\d{2})\\s?(\\d{2})$', 'message': '', 'messageRequired': 'Bitte Telefonnummer eingeben', 'messageRegex': 'Telefonnummer ist ungültig', 'touched': false }
 	});
 
 	useEffect(() => {
-		props.setStep(0);
+		setStep(0);
 	}, []);
 
 	const validateObject = (object) => {
@@ -57,6 +57,11 @@ const PhoneNumber = (props) => {
 					let desiredLength = object.length;
 					object.message = object.messageLength;
 					object.isValid = object.value.length === desiredLength;
+					break;
+				case "minlength":
+					let minLength = object.minlength;
+					object.message = object.minlengthMessage;
+					object.isValid = object.value.length >= minLength;
 					break;
 			}
 
@@ -99,7 +104,6 @@ const PhoneNumber = (props) => {
 		if (errorCount === 0) {
 			//copy values and pass to next view
 			onBoardingObject.phoneNumber = phoneValidation.phone.value;
-
 			props.history.push("/onBoarding/identification", onBoardingObject);
 		}
 	}

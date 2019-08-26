@@ -6,7 +6,7 @@ import ArrowIcon from "@material-ui/icons/ArrowForward";
 import SuccessIcon from '@material-ui/icons/CheckCircle';
 
 //import resources
-import onBoardingObject from "../../resources/onBoardingObject";
+import { onBoardingObject, onBoardingUtilities } from "../../resources/onBoardingObject";
 import IDBild from "../../images/IDBild.png";
 import IDFrontExample from "../../images/IDFrontExample.png";
 import IDBackExample from "../../images/IDBackExample.png";
@@ -112,31 +112,32 @@ const styles = theme => ({
 });
 
 const Thanks = (props) => {
-    const { classes } = props;
-
-    console.log(props);
+	const { classes } = props;
 
     useEffect(() => {
-        props.setStep(3.1);
+		props.setStep(4);
+
     }, []);
 
     const nextStep = () => {
-        props.history.push("/onBoarding/signContract", onBoardingObject);
+		props.history.push("/onBoarding/signContract", props.location.state);
     }
+
+	const Picture = ({ data, selectedClass }) => <img src={data} className={selectedClass} />
 
     return (
         <React.Fragment>
             <div className={classes.sideSection} >
-                <Typography variant="h1" component="h1">Danke, {onBoardingObject.name}!</Typography>
+				<Typography variant="h1" component="h1">Danke, {props.location.state.name}!</Typography>
                 <Typography variant="subtitle1" component="p">Mit 3 einfachen Schritten Ihr Konto einrichten</Typography>
 
                 <div className={classes.dataSpaceHolder} />
 
                 <div className={classes.dataSection}>
                     <div className={classes.rectangleStyle}>
-                        {/* TODO: src ersetzten und png in ../../images löschen*/}
-                        <img className={classes.imgIDStyle} src={IDFrontExample} alt="Picture ID Front" />
-                        <img className={classes.imgIDStyle} src={IDBackExample} alt="Picture ID Back" />
+						{/* TODO: src ersetzten und png in ../../images löschen*/}
+						<Picture data={props.location.state.idPhotoFrontMinimized} selectedClass={classes.imgIDStyle} />
+						<Picture data={props.location.state.idPhotoBack} selectedClass={classes.imgIDStyle} />
                     </div>
                     <div className={classes.infoBox}>
                         <div className={classes.cardInfoTextStyle} >

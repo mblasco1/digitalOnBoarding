@@ -16,9 +16,10 @@ namespace DigitalOnboarding.Services
     public class BioIdClient : IBioIdClient
     {
         private readonly HttpClient httpClient;
-        private const string appID = "9835d0c6-8985-4657-b6c8-b13f52752d18";
-        private const string appSecret = "wgiVhwfNMoX6ZYlj1+lJNb5D";
-        private const string apiUrl = "https://bws.bioid.com/extension/";
+        private const string appID = "2d875c03-4dbb-4c54-a1f8-4a906fa1e1f2";
+		private const string appSecret = "9Q4x8igPOIW2Jjva6s1Yeulx";
+		//private const string appSecret = "wgiVhwfNMoX6ZYlj1+lJNb5D";		
+		private const string apiUrl = "https://bws.bioid.com/extension/";
 
         public BioIdClient(HttpClient httpClient)
         {

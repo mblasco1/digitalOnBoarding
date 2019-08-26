@@ -29,7 +29,7 @@ const styles = theme => ({
 	fixedContent: {
 		display: 'flex',
 		width: '100%',
-		marginTop: 74,
+		marginTop: 50,
 		flexDirection: 'column',
 		marginBottom: 50
 	},

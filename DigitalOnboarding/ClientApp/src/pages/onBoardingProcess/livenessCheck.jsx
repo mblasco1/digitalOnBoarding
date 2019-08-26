@@ -7,7 +7,8 @@ import $ from 'jquery';
 
 //import resources
 import { ReactComponent as LivenessIcon } from "../../images/livenessIcon.svg";
-import onBoardingObject from "../../resources/onBoardingObject";
+import { onBoardingObject, onBoardingUtilities } from "../../resources/onBoardingObject";
+import useInterval from "../../resources/useInterval";
 
 //import components
 import TitleSection from "./components/_titleSection";
@@ -16,9 +17,12 @@ import TitleSection from "./components/_titleSection";
 const styles = theme => ({
 	actionSection: {
 		marginTop: 50,
-		justifyContent: 'center',
+		alignItems: 'center',
 		display: 'flex',
 		flexDirection: 'column'
+	},
+	pictureContainer: {
+		display: 'none'
 	}
 });
 
@@ -29,7 +33,7 @@ const LivenessCheck = (props) => {
 	const img1Container = useRef(null);
 	const img2Container = useRef(null);
 	const [capturing, setCapturing] = useState(false);
-	const [bla, setBla] = useState(false);
+	const [isRunning, setIsRunning] = useState(false);
 
 	const maxHeight = 480;
 	const motionAreaHeight = 160;
@@ -54,6 +58,8 @@ const LivenessCheck = (props) => {
 	var sendEvent = null;
 	//var returnURL = '/';
 	//var state = response.state;
+
+	var hdCamera = null;
 
 	var motioncanvas = document.createElement('canvas');
 
@@ -81,22 +87,59 @@ const LivenessCheck = (props) => {
 
 		getBioIdConfig();
 
-		startVideo(video, initCanvases);
+		navigator.mediaDevices.enumerateDevices().then(gotDevices).then(startVideo);
+
+		//temporarily search for specifi HD cam and select it
+		function gotDevices(deviceInfos) {
+			for (let i = 0; i !== deviceInfos.length; ++i) {
+				const deviceInfo = deviceInfos[i];
+				if (deviceInfo.label.indexOf('HD Pro Webcam') !== -1) {
+					console.log(deviceInfo);
+					hdCamera = deviceInfo;
+				}
+			}
+		}
+
+		//startVideo(video, initCanvases);
 		
 
 
 	}, []);
 
-	function startVideo(videoElement, successCallback) {
-		const constraints = { audio: false, video: { facingMode: "user" } };
+	useInterval(() => {
+
+
+	}, isRunning ? 100 : null);
+
+	function startVideo() {
+
+		let constraints = { audio: false, video: { facingMode: "user"  } };
+
+		if (hdCamera !== null) {
+			constraints = {
+				video: {
+					deviceId: { exact: hdCamera.deviceId },
+					facingMode: "user"
+				},
+				audio: false
+			}
+		}
+
+		console.log(hdCamera);
 		navigator.mediaDevices.getUserMedia(constraints)
 			.then(function (mediaStream) {
 				console.log('Media stream created:', mediaStream.getVideoTracks()[0]);
-				videoElement.srcObject = mediaStream;
-				videoElement.onloadedmetadata = function (e) {
+				video.srcObject = mediaStream;
+				video.onloadedmetadata = function (e) {
 					console.log('Playing live media stream');
-					videoElement.play();
-					if (successCallback) { successCallback(videoElement, mediaStream); }
+					video.play();
+					if (canvasContainer.current !== null) {
+						canvasContainer.current.selectedStream = mediaStream;
+						canvasContainer.current.stop = function stopStream() {
+							canvasContainer.current.selectedStream.getTracks()[0].stop();
+						}
+						if (initCanvases) { initCanvases(); }
+					}
 				};
 			})
 			.catch(function (err) {
@@ -117,7 +160,7 @@ const LivenessCheck = (props) => {
 		copy.translate(canvasContainer.current.width, 0);
 		copy.scale(-1, 1);
 		// set an interval-timer to grab about 20 frames per second
-		processInterval = setInterval(processFrame, 500);
+		processInterval = setInterval(processFrame, 100);
 	}
 
 	const processFrame = () => {
@@ -129,7 +172,7 @@ const LivenessCheck = (props) => {
 		//console.log(capturing);
 		//console.log(bla);
 
-		if (capturing || 1 ===1) {
+		if (capturing || 1 === 1) {
 			//console.log('iscapturing');
 			// scale current image into the motion canvas
 			let motionctx = motioncanvas.getContext('2d');
@@ -157,6 +200,7 @@ const LivenessCheck = (props) => {
 				//$(image1).show();
 			}
 		}
+
 	}
 
 	function sendImages() {
@@ -186,28 +230,16 @@ const LivenessCheck = (props) => {
 		}).done(function (data, textStatus, jqXHR) {
 			console.log('upload succeeded');
 			console.log(data);
-			if (data.Accepted) {
-
-				console.log(sendEvent);
-				console.log(processInterval);
-
-				clearTimeout(sendEvent);
-				clearInterval(processInterval);
-				video.pause();
+			if (data.Accepted && data.Warnings[0] !== "NoFaceFound") {
 
 				if (img1Container.current != null) {
-					onBoardingObject.phoneNumber = props.location.state.phoneNumber;
-					onBoardingObject.name = props.location.state.name;
-					onBoardingObject.street = props.location.state.street;
-					onBoardingObject.streetnumber = props.location.state.streetnumber;
-					onBoardingObject.city = props.location.state.city;
-					onBoardingObject.zip = props.location.state.zip;
-					onBoardingObject.email = props.location.state.email;
-					onBoardingObject.nationality = props.location.state.nationality;
-					onBoardingObject.idPhotoFront = props.location.state.idPhotoFront;
-					onBoardingObject.idPhotoFrontMicroblinkObject = props.location.state.idPhotoFrontMicroblinkObject;
-					onBoardingObject.idPhotoBack = props.location.state.idPhotoBack;
-					onBoardingObject.idPhotoBackMicroblinkObject = props.location.state.idPhotoBackMicroblinkObject;
+
+					canvasContainer.current.stop();
+					clearTimeout(sendEvent);
+					clearInterval(processInterval);
+
+					onBoardingUtilities.copyFromObject(onBoardingObject, props.location.state);
+
 					onBoardingObject.BioIdLivenssObject = data;
 					onBoardingObject.livenessDetectionFirstPicture = img1Container.current.src;
 					onBoardingObject.livenessDetectionSecondPicture = img2Container.current.src;
@@ -317,32 +349,14 @@ const LivenessCheck = (props) => {
 		return movementPercentage;
 	}
 
-	const nextStep = () => {
-		img1Container.current.src = "";
-		//$(image1).hide();
-		img2Container.current.src = "";
-		//$(image2).hide();
-		$('#capture').prop('disabled', true);
-		$('#result').empty();
-		console.log('i was here');
-		setCapturing(true);
-		setBla(true);
-		console.log(capturing);
-		console.log(bla);
-		//props.history.push("/onBoarding/livenessCheck", props.location.state);
-	}
-
 	return (
 		<React.Fragment>
 			<TitleSection title="Selfie & Liveness Check" Icon={LivenessIcon} subtitle="Drehe bitte dein Gesicht zwischen beiden Aufnahmen" />
 			<div className={classes.actionSection}>
-				<canvas ref={canvasContainer} width={600} height={450} />
-				<Fab onClick={nextStep} aria-label="arrow" className={classes.fab}>
-					<ArrowIcon color='primary' />
-				</Fab>
+				<canvas ref={canvasContainer} width={360} height={480} />
 			</div>
-			<img id="img1" ref={img1Container} />
-			<img id="img2" ref={img2Container} />
+			<img id="img1" className={classes.pictureContainer} ref={img1Container} />
+			<img id="img2" className={classes.pictureContainer} ref={img2Container} />
 		</React.Fragment>
 	);
 }

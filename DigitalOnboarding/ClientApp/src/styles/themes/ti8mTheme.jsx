@@ -63,6 +63,18 @@ const theme = createMuiTheme({
 		subtitle1: {
 			opacity: 0.3,
 			fontSize: 16
+		},
+		h6: {
+			lineHeight: '74px',
+			fontWeight: 500,
+			fontSize: '56px',
+			color: '#FFFFFF'
+		},
+		subtitle2: {
+			color: '#FFFFFF',
+			opacity: 0.3,
+			fontSize: '16px',
+			lineHeight: '21px'
 		}
 	}
 });

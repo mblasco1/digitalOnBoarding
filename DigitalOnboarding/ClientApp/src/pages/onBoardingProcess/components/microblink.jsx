@@ -4,7 +4,7 @@ import { withStyles } from "@material-ui/core";
 
 //import resources
 import { ReactComponent as ScanIcon } from "../../images/idScanIcon.svg";
-import onBoardingObject from "../../resources/onBoardingObject";
+import { onBoardingObject } from "../../resources/onBoardingObject";
 
 //import components
 import TitleSection from "./components/_titleSection";

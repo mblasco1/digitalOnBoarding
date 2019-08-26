@@ -15,7 +15,7 @@ import FailedIcon from '@material-ui/icons/Clear';
 
 //import resources
 import { ReactComponent as IdentityIcon } from "../../images/picto_identity.svg";
-import onBoardingObject from "../../resources/onBoardingObject";
+import { onBoardingObject, onBoardingUtilities } from "../../resources/onBoardingObject";
 
 //import components
 import TitleSection from "./components/_titleSection";
@@ -74,9 +74,6 @@ const styles = theme => ({
 const PhoneNumber = (props) => {
 	const { classes } = props;
 
-	console.log(props);
-	console.log(onBoardingObject);
-
 	const addressValidationEnum = Object.freeze({ "NotPossible": 0, "Pending": 1, "Success": 2, "Failed": 3 });
 
 	//ToDo: refactor validation to a generic validation class
@@ -90,7 +87,6 @@ const PhoneNumber = (props) => {
 	});
 	const [nationality, setNationality] = useState('Schweiz');
 	const [adressValidationState, setAddressValidationState] = useState(addressValidationEnum.NotPossible);
-
 
 	useEffect(() => {
 		props.setStep(1);
@@ -143,8 +139,6 @@ const PhoneNumber = (props) => {
 	}
 
 	var validateAddress = async function () {
-		console.log('address is ready to be validated');
-
 		let formData = new FormData();
 		formData.append('name', identificationValidation.name.value);
 		formData.append('street', identificationValidation.street.value);
@@ -159,7 +153,6 @@ const PhoneNumber = (props) => {
 
 		let result = await response.json();
 
-		console.log(result);
 		setAddressValidationState(result.isValid ? addressValidationEnum.Success : addressValidationEnum.Failed);
 	}
 
@@ -171,7 +164,7 @@ const PhoneNumber = (props) => {
 			identificationValidation.zip.isValid &&
 			identificationValidation.city.isValid;
 
-		if (canBeValidated) {
+		if (canBeValidated && (adressValidationState === addressValidationEnum.NotPossible || adressValidationState === addressValidationEnum.Failed)) {
 			setAddressValidationState(addressValidationEnum.Pending);
 			validateAddress();
 		}
@@ -186,12 +179,10 @@ const PhoneNumber = (props) => {
 
 	const onlyNumbers = (evt) => {
 		const keyCode = evt.keyCode || evt.which;
-		if (!((keyCode >= 48 && keyCode <= 57) || (keyCode >= 96 && keyCode <= 105))) {
+		if (!((keyCode >= 48 && keyCode <= 57) || (keyCode >= 96 && keyCode <= 105) || keyCode === 46 || keyCode === 37 || keyCode === 39 || keyCode == 8 || keyCode === 9)) {
 			evt.preventDefault();
 		}
 	}
-
-	
 
 	const nextStep = () => {
 		//copy, mutate, replace state
@@ -212,8 +203,9 @@ const PhoneNumber = (props) => {
 		setIdentificationValidation(copiedIdentificationObject);
 
 		if (errorCount === 0 && adressValidationState === addressValidationEnum.Success) {
+
 			//retrieve from location.state, add values, pass object		
-			onBoardingObject.phoneNumber = props.location.state.phoneNumber;
+			onBoardingUtilities.copyFromObject(onBoardingObject, props.location.state);
 			onBoardingObject.name = identificationValidation.name.value;
 			onBoardingObject.street = identificationValidation.street.value;
 			onBoardingObject.streetnumber = identificationValidation.streetnumber.value;

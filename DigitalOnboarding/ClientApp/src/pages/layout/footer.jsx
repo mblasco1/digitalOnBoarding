@@ -1,28 +1,27 @@
 ﻿//import libs
 import React from 'react';
-import { withStyles } from '@material-ui/core/styles';
-import AppBar from '@material-ui/core/AppBar';
-import Toolbar from '@material-ui/core/Toolbar';
+import { withStyles } from "@material-ui/core";
 
 const styles = {
-  grow: {
-    flexGrow: 1,
-	},
-	appBar: {
+	footer: {
+		position: 'fixed',
+		left: 0,
 		bottom: 0,
-		top: 'auto'
+		height: 44,
+		width: '100%',
+		backgroundColor: 'white',
+		'z-index': -1
 	},
+
 };
 
 const Footer = (props) => {
     const { classes } = props;
 
 	return (
-		<AppBar position="fixed" color="primary" className={classes.appBar}>
-			<Toolbar>
-				This is a footer
-			</Toolbar>
-		</AppBar>
+		<div>
+			
+		</div>
   );
 }
 export default withStyles(styles)(Footer);

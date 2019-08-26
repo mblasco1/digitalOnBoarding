@@ -7,7 +7,7 @@ import ArrowIcon from "@material-ui/icons/ArrowForward";
 
 //import resources
 import { ReactComponent as PictoIdent } from "../../images/Picto_Ident.svg";
-import onBoardingObject from "../../resources/onBoardingObject";
+import { onBoardingObject, onBoardingUtilities } from "../../resources/onBoardingObject";
 import { flexbox } from "@material-ui/system";
 
 
@@ -38,7 +38,8 @@ const Thanks = (props) => {
     console.log(props);
 
     useEffect(() => {
-        props.setStep(4);
+		props.setStep(4);
+		onBoardingUtilities.copyFromObject(onBoardingObject, props.location.state);
     }, []);
 
     const nextStep = () => {
