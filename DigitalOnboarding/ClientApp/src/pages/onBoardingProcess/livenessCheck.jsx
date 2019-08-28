@@ -164,40 +164,42 @@ const LivenessCheck = (props) => {
 	}
 
 	const processFrame = () => {
-		let x = 0, y = 0, w = canvasContainer.current.width, h = canvasContainer.current.height, aspectratio = w / h;
-		let cutoff = video.videoWidth - (video.videoHeight * aspectratio);
-		let copy = canvasContainer.current.getContext('2d');
-		copy.drawImage(video, cutoff / 2, 0, video.videoWidth - cutoff, video.videoHeight, 0, 0, canvasContainer.current.width, canvasContainer.current.height);
+		if (canvasContainer.current !== null && canvasContainer.current !== undefined) {
+			let x = 0, y = 0, w = canvasContainer.current.width, h = canvasContainer.current.height, aspectratio = w / h;
+			let cutoff = video.videoWidth - (video.videoHeight * aspectratio);
+			let copy = canvasContainer.current.getContext('2d');
+			copy.drawImage(video, cutoff / 2, 0, video.videoWidth - cutoff, video.videoHeight, 0, 0, canvasContainer.current.width, canvasContainer.current.height);
 
-		//console.log(capturing);
-		//console.log(bla);
+			//console.log(capturing);
+			//console.log(bla);
 
-		if (capturing || 1 === 1) {
-			//console.log('iscapturing');
-			// scale current image into the motion canvas
-			let motionctx = motioncanvas.getContext('2d');
-			motionctx.drawImage(canvasContainer.current, canvasContainer.current.width / 8, canvasContainer.current.height / 8, canvasContainer.current.width - canvasContainer.current.width / 4, canvasContainer.current.height - canvasContainer.current.height / 4, 0, 0, motioncanvas.width, motioncanvas.height);
-			let currentImageData = motionctx.getImageData(0, 0, motioncanvas.width, motioncanvas.height);
+			if (capturing || 1 === 1) {
+				//console.log('iscapturing');
+				// scale current image into the motion canvas
+				let motionctx = motioncanvas.getContext('2d');
+				motionctx.drawImage(canvasContainer.current, canvasContainer.current.width / 8, canvasContainer.current.height / 8, canvasContainer.current.width - canvasContainer.current.width / 4, canvasContainer.current.height - canvasContainer.current.height / 4, 0, 0, motioncanvas.width, motioncanvas.height);
+				let currentImageData = motionctx.getImageData(0, 0, motioncanvas.width, motioncanvas.height);
 
-			if (template) {
-				let movement = motionDetection(currentImageData, template);
-				// trigger if movementPercentage is above threshold (default: when 20% of maximum movement is exceeded)
-				if (movement > motionThreshold) {
-					//console.log('i was here too');
-					setCapturing(false);
-					template = null;
-					img2Container.current.src = canvasContainer.current.toDataURL();
-					console.log('captured second image');
-					//$(image2).show();
-					sendEvent = setTimeout(sendImages);
+				if (template) {
+					let movement = motionDetection(currentImageData, template);
+					// trigger if movementPercentage is above threshold (default: when 20% of maximum movement is exceeded)
+					if (movement > motionThreshold) {
+						//console.log('i was here too');
+						setCapturing(false);
+						template = null;
+						img2Container.current.src = canvasContainer.current.toDataURL();
+						console.log('captured second image');
+						//$(image2).show();
+						sendEvent = setTimeout(sendImages);
+					}
+				} else {
+					// use as template
+					template = createTemplate(currentImageData);
+					// capture the current image
+					img1Container.current.src = canvasContainer.current.toDataURL();
+					console.log('captured first image');
+					//$(image1).show();
 				}
-			} else {
-				// use as template
-				template = createTemplate(currentImageData);
-				// capture the current image
-				img1Container.current.src = canvasContainer.current.toDataURL();
-				console.log('captured first image');
-				//$(image1).show();
 			}
 		}
 
@@ -210,6 +212,7 @@ const LivenessCheck = (props) => {
 		var formData = new FormData();
 		formData.append('image1', img1Container.current.src);
 		formData.append('image2', img2Container.current.src);
+		formData.append('accuracy', 1);
 		$.ajax({
 			url: apiurl + 'upload?tag=any&trait=' + trait,
 			type: 'POST',

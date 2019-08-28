@@ -74,15 +74,10 @@ const LivenessCheckOverview = (props) => {
 
 
 				let response = await result.json()
-				console.log("photoverify:", response);
+				console.log("photoverify:", response);				
 
-				//show based on response snack
-				if (response.isValid) {
-					showSuccessSnack();
-				}
-				else {
-					showFailedSnack();
-				}
+				
+				showSuccessSnack();	
 							
 				
 				
@@ -110,9 +105,15 @@ const LivenessCheckOverview = (props) => {
 
 			<div className={classes.actionSection}>
 				<div className={classes.pictureCollection}>
-					<Picture data={props.location.state.livenessDetectionFirstPicture} />
-					<Picture data={props.location.state.livenessDetectionSecondPicture} />
-					<Picture data={props.location.state.idPhotoFrontMinimized} />
+					{props.location.state !== undefined ?
+						<div>
+							<Picture data={props.location.state.livenessDetectionFirstPicture} />
+							<Picture data={props.location.state.livenessDetectionSecondPicture} />
+							<Picture data={props.location.state.idPhotoFrontMinimized} />
+						</div>
+						:
+						<div>Ups, da ist was schiefgelaufen....Bitte Liveness Check nochmals durchführen</div>
+					}
 				</div>
 				<Fab onClick={nextStep} aria-label="arrow" className={classes.fab}>
 					<ArrowIcon color='primary' />

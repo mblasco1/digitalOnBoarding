@@ -35,7 +35,7 @@ const IdScanBackConfermation = (props) => {
 			//slice image - drawImage( image, source_x, source_y, w, h, dest_x, dest_y, w, h );
 			//replace with microblink object as soon as they support swiss ID's
 			//ctx.drawImage(imgObject, 75, 50, 850, 650, 0, 0, 575, 350);
-			ctx.drawImage(imgObject, 340, 180, 600, 400, 0, 0, 580, 355);
+			ctx.drawImage(imgObject, 340, 180, 600, 400, 0, 0, 640, 480);
 			//ctx.drawImage(imgObject, 0, 0);
 		}
 
@@ -51,7 +51,7 @@ const IdScanBackConfermation = (props) => {
 			<TitleSection title="ID Rückseite" Icon={ScanIcon} subtitle="Die Rückseite wurde erfolgreich gescannt" />
 			<div className={classes.actionSection}>
 				<div>
-					<canvas ref={canvasContainer} width={580} height={355} />
+					<canvas ref={canvasContainer} width={640} height={480} />
 				</div>
 				<div>
 					<Fab onClick={nextStep} aria-label="arrow" className={classes.fab}>

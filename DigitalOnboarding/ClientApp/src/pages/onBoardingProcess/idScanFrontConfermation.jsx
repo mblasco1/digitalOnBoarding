@@ -35,7 +35,7 @@ const IdScanFrontConfermation = (props) => {
 		imgObject.onload = () => {
 			//replace with microblink object as soon as they support swiss ID's
 			//slice image to card - drawImage( image, source_x, source_y, w, h, dest_x, dest_y, w, h );
-			ctx.drawImage(imgObject, 115, 105, 420, 260, 0, 0, 390, 250);
+			ctx.drawImage(imgObject, 115, 105, 420, 260, 0, 0, 480, 360);
 			canvasContainer.current.toBlob(getCardImage, 'image/jpeg');
 		}
 
@@ -74,7 +74,7 @@ const IdScanFrontConfermation = (props) => {
 			<TitleSection title="ID Vorderseite" Icon={ScanIcon} subtitle="Die Vorderseite wurde erfolgreich gescannt" />
 			<div className={classes.actionSection}>
 				<div>
-					<canvas ref={canvasContainer} classes={classes.mirrored} width={390} height={250} />
+					<canvas ref={canvasContainer} classes={classes.mirrored} width={480} height={360} />
 				</div>
 				<div>
 					<Fab onClick={nextStep} aria-label="arrow" className={classes.fab}>
