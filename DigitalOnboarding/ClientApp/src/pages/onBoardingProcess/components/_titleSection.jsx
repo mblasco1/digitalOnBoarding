@@ -15,7 +15,12 @@ const styles = theme => ({
 		height: 170,
 		display: 'flex',
 		width: '100%'
-	}
+    },
+    icon: {
+        [theme.breakpoints.down(800)]: {
+            display: 'none'
+        },
+    }
 });
 
 const TitleSection = (props) => {
