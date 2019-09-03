@@ -7,24 +7,30 @@ import StepLabel from "@material-ui/core/StepLabel";
 import { ReactComponent as Logo } from "../../../images/blue.svg";
 
 const styles = theme => ({
-	flexContainer: {
-		display: 'flex',
-		flexDirection: 'column',
-		alignItems: 'center'
-	},
-	flexContainerContent: {
-		width: 500,
-		[theme.breakpoints.down(1280 + theme.spacing(12))]: {
-			width: '100%'
+    flexContainer: {
+        display: 'flex',
+        flexDirection: 'column',
+        alignItems: 'center'
+    },
+    flexContainerContent: {
+        width: 500,
+        [theme.breakpoints.down(1280 + theme.spacing(12))]: {
+            width: '100%'
+        }
+    },
+    width670: {
+        width: 670,
+        [theme.breakpoints.down(800)]: {
+            width: 'unset',
+        }
+    },
+    fixedStepper: {
+        width: 500,
+        marginLeft: 170, //Icon of content section
+        [theme.breakpoints.down(800)]: {
+            marginLeft: 'unset',
+            width: 'unset',
 		}
-	},
-	width670: {
-		width: 670
-	},	
-	fixedStepper: {
-		width: 500,
-		marginLeft: 170 //Icon of content section
-
 	},
 	fixedContent: {
 		display: 'flex',
