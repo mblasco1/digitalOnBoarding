@@ -21,13 +21,16 @@ const styles = theme => ({
         display: 'flex',
         flexDirection: 'column',
         marginLeft: '165px',
+        [theme.breakpoints.down(800)]: {
+            marginLeft: 0,
+            marginTop: 10,
+        }
     },
 
     sideSection: {
         display: 'flex',
         flexFlow: 'column',
         alignItems: 'center'
-
     },
 
     rectangleStyle: {
@@ -42,6 +45,11 @@ const styles = theme => ({
         display: 'flex',
         flexFlow: 'column',
         marginLeft: '165px',
+        [theme.breakpoints.down(800)]: {
+            marginLeft: 0,
+            marginTop: 10,
+        }
+
     },
 });
 
