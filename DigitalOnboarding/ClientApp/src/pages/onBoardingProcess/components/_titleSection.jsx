@@ -9,12 +9,18 @@ const styles = theme => ({
 		height: 170,
 		display: 'flex',
 		flexDirection: 'column',
-		width: '100%'
+        width: '100%',
+        [theme.breakpoints.down(800)]: {
+            height: 100,
+        },
 	},
 	titleSection: {
 		height: 170,
 		display: 'flex',
-		width: '100%'
+        width: '100%',
+        [theme.breakpoints.down(800)]: {
+            height: 100,
+        },
     },
     icon: {
         [theme.breakpoints.down(800)]: {
