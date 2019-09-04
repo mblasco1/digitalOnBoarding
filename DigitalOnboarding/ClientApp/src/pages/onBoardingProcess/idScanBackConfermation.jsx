@@ -11,13 +11,25 @@ import { ReactComponent as ScanIcon } from "../../images/idScanIcon.svg";
 import TitleSection from "./components/_titleSection";
 
 
-const styles = () => ({
+const styles = theme => ({
 	actionSection: {
 		marginLeft: 210,
 		justifyContent: 'center',
 		display: 'flex',
-		flexDirection: 'column',
-	}
+        flexDirection: 'column',
+        [theme.breakpoints.down(800)]: {
+            marginLeft: 0,
+            alignItems: 'center',
+        }
+    },
+    canvasSize: {
+        width: 640,
+        height: 480,
+        [theme.breakpoints.down(800)]: {
+            width: 320,
+            height: 200,
+        }
+    },
 });
 
 const IdScanBackConfermation = (props) => {
@@ -51,7 +63,7 @@ const IdScanBackConfermation = (props) => {
 			<TitleSection title="ID Rückseite" Icon={ScanIcon} subtitle="Die Rückseite wurde erfolgreich gescannt" />
 			<div className={classes.actionSection}>
 				<div>
-					<canvas ref={canvasContainer} width={640} height={480} />
+                    <canvas ref={canvasContainer} className={classes.canvasSize}/>
 				</div>
 				<div>
 					<Fab onClick={nextStep} aria-label="arrow" className={classes.fab}>
