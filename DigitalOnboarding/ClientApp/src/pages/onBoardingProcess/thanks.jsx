@@ -1,6 +1,6 @@
 ﻿//import libs
 import React, { useEffect } from "react";
-import { withStyles, Typography} from "@material-ui/core";
+import { withStyles, Typography } from "@material-ui/core";
 import Fab from "@material-ui/core/Fab";
 import ArrowIcon from "@material-ui/icons/ArrowForward";
 
@@ -17,7 +17,10 @@ const styles = theme => ({
         display: 'flex',
         flexFlow: 'column',
         alignItems: 'center',
-        marginLeft: '170px'
+        marginLeft: '170px',
+        [theme.breakpoints.down(800)]: {
+            marginLeft: 0,
+        }
     },
 
     actionSection: {
@@ -28,8 +31,18 @@ const styles = theme => ({
 
     imgSection: {
         height: '100%',
-        marginTop: '60px'
+        marginTop: '60px',
+        [theme.breakpoints.down(800)]: {
+            marginTop: 20,
+        }
+    },
+
+    svgStyle: {
+        [theme.breakpoints.down(800)]: {
+            width: 200,
+        }
     }
+
 });
 
 const Thanks = (props) => {
@@ -38,8 +51,8 @@ const Thanks = (props) => {
     console.log(props);
 
     useEffect(() => {
-		props.setStep(4);
-		onBoardingUtilities.copyFromObject(onBoardingObject, props.location.state);
+        props.setStep(4);
+        onBoardingUtilities.copyFromObject(onBoardingObject, props.location.state);
     }, []);
 
     const nextStep = () => {
@@ -53,7 +66,7 @@ const Thanks = (props) => {
                 <Typography variant="subtitle1" component="p">Mit 3 einfachen Schritten Ihr Konto einrichten</Typography>
 
                 <div className={classes.imgSection}>
-                    <PictoIdent />
+                    <PictoIdent className={classes.svgStyle} />
                 </div>
 
                 <div className={classes.actionSection}>
