@@ -19,7 +19,11 @@ const styles = theme => ({
 		marginLeft: 210,
 		justifyContent: 'center',
 		display: 'flex',
-		flexDirection: 'column'
+        flexDirection: 'column',
+        [theme.breakpoints.down(800)]: {
+            marginLeft: 0,
+            alignItems: 'center',
+        }
 	},
 	textFieldPhone: {
 		width: 190
