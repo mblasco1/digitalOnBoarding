@@ -27,10 +27,8 @@ const styles = (theme) => ({
         position: 'absolute',
         'z-index': -1,
         [theme.breakpoints.down(800)]: {
-            marginTop: 0,
             width: 400,
             height: 240,
-            display: 'inline'
         }
     },
     canvasElement: {
