@@ -8,8 +8,6 @@ import ArrowIcon from "@material-ui/icons/ArrowForward";
 //import resources
 import { ReactComponent as PictoIdent } from "../../images/Picto_Ident.svg";
 import { onBoardingObject, onBoardingUtilities } from "../../resources/onBoardingObject";
-import { flexbox } from "@material-ui/system";
-
 
 const styles = theme => ({
 

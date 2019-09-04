@@ -10,7 +10,8 @@ const styles = {
 		height: 44,
 		width: '100%',
 		backgroundColor: 'white',
-		'z-index': -1
+        'z-index': -1,
+        display: 'none' //not needed yet
 	},
 
 };
@@ -18,8 +19,8 @@ const styles = {
 const Footer = (props) => {
     const { classes } = props;
 
-	return (
-		<div>
+    return (
+        <div className={classes.footer}>
 			
 		</div>
   );

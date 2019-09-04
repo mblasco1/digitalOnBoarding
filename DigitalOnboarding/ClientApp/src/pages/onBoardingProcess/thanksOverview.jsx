@@ -24,6 +24,11 @@ const styles = theme => ({
         justifyContent: 'center',
         alignItems: 'center',
         display: 'flex',
+
+        [theme.breakpoints.down(800)]: {
+            height: 180,
+            width: 320,
+        }
     },
 
     rectangleSpaceHolder: {
@@ -35,31 +40,42 @@ const styles = theme => ({
         flexFlow: 'column',
         alignItems: 'center',
         marginLeft: '170px',
+        [theme.breakpoints.down(800)]: {
+            marginLeft: 0,
+        }
     },
 
     actionSection: {
         justifyContent: 'center',
         display: 'flex',
         flexDirection: 'column',
+        [theme.breakpoints.down(800)]: {
+            marginTop: -20,
+        }
     },
 
     dataSection: {
         justifyContent: 'center',
         display: 'flex',
         flexDirection: 'row'
-
     },
 
     dataSpaceHolder: {
-        marginTop: '60px'
+        marginTop: '60px',
+        [theme.breakpoints.down(800)]: {
+            marginTop: 0,
+        }
     },
 
     infoBox: {
         marginLeft: '36px',
         display: 'flex',
         alignItems: 'center',
-        justifyContent: 'center'    
+        justifyContent: 'center', 
 
+        [theme.breakpoints.down(800)]: {
+            display: 'none',
+        }
     },
 
     cardInfoTextStyle: {
@@ -94,7 +110,8 @@ const styles = theme => ({
         display: 'inline-block',
         marginLeft: 'auto',
         marginRight: 'auto',
-        textAlign: 'center'
+        textAlign: 'center',
+
     },
 
     imgStyle: {
@@ -106,7 +123,11 @@ const styles = theme => ({
         marginRight: 'auto',
         textAlign: 'center',
 
-        borderRadius: '50%'
+        borderRadius: '50%',
+
+        [theme.breakpoints.down(800)]: {
+            maxHeight: 90,
+        }
     }
 
 });

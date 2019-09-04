@@ -33,12 +33,13 @@ const Welcome = (props) => {
 	return (
 		<div className={classes.background}>
 			<Typography variant="h6" component="h1">Willkommen</Typography>
-			<Typography variant="subtitle2" component="p">Mit drei einfachen Schritten Ihr Konto einrichten!</Typography>
-
+            <Typography variant="subtitle2" component="p">Mit drei einfachen Schritten Ihr Konto einrichten!</Typography>
+            
 			<Fab onClick={start} aria-label="arrow" className={classes.fab}>
 				<TimLogo className={classes.logo} />
-			</Fab>
-
+            </Fab>
+            <br></br>
+            <div>Version: 1.0.1.6 </div>
 		</div>
 	);
 

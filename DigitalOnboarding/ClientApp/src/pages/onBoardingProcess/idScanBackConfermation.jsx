@@ -40,14 +40,15 @@ const IdScanBackConfermation = (props) => {
 		setStep(2);
 
 		var imgObject = new Image();
-		imgObject.src = props.location.state.idPhotoBack;
-		const ctx = canvasContainer.current.getContext("2d");
-
+        imgObject.src = props.location.state.idPhotoBack;
+        const ctx = canvasContainer.current.getContext("2d");
 		imgObject.onload = () => {
 			//slice image - drawImage( image, source_x, source_y, w, h, dest_x, dest_y, w, h );
 			//replace with microblink object as soon as they support swiss ID's
 			//ctx.drawImage(imgObject, 75, 50, 850, 650, 0, 0, 575, 350);
-			ctx.drawImage(imgObject, 340, 180, 600, 400, 0, 0, 640, 480);
+            //ctx.drawImage(imgObject, 340, 180, 600, 400, 0, 0, 640, 480);
+            ctx.drawImage(imgObject, 360, 190, 1200, 1100, 0, 0, 640, 480);
+            console.log('================');
 			//ctx.drawImage(imgObject, 0, 0);
 		}
 
