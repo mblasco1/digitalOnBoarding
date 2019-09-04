@@ -10,11 +10,15 @@ import { onBoardingObject, onBoardingUtilities } from "../../resources/onBoardin
 import TitleSection from "./components/_titleSection";
 
 
-const styles = () => ({
+const styles = theme => ({
 	actionSection: {
 		marginTop: 50,
 		height: 480,
-		width: 640
+        width: 640,
+        [theme.breakpoints.down(800)]: {
+            height: 280,
+            width: 340,
+        }
 	},
 	microblinkContainer: {
 		'--mb-widget-font-family': 'Roboto',
