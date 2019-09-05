@@ -6,12 +6,7 @@ import ArrowIcon from "@material-ui/icons/ArrowForward";
 import SuccessIcon from '@material-ui/icons/CheckCircle';
 
 //import resources
-import { onBoardingObject, onBoardingUtilities } from "../../resources/onBoardingObject";
-import IDBild from "../../images/IDBild.png";
-import IDFrontExample from "../../images/IDFrontExample.png";
-import IDBackExample from "../../images/IDBackExample.png";
-import { minWidth } from "@material-ui/system";
-
+import { onBoardingObject } from "../../resources/onBoardingObject";
 
 const styles = theme => ({
 
@@ -71,7 +66,7 @@ const styles = theme => ({
         marginLeft: '36px',
         display: 'flex',
         alignItems: 'center',
-        justifyContent: 'center', 
+        justifyContent: 'center',
 
         [theme.breakpoints.down(800)]: {
             display: 'none',
@@ -111,7 +106,6 @@ const styles = theme => ({
         marginLeft: 'auto',
         marginRight: 'auto',
         textAlign: 'center',
-
     },
 
     imgStyle: {
@@ -133,32 +127,30 @@ const styles = theme => ({
 });
 
 const Thanks = (props) => {
-	const { classes } = props;
+    const { classes } = props;
 
     useEffect(() => {
-		props.setStep(4);
-
+        props.setStep(4);
     }, []);
 
     const nextStep = () => {
-		props.history.push("/onBoarding/signContract", props.location.state);
+        props.history.push("/onBoarding/signContract", props.location.state);
     }
 
-	const Picture = ({ data, selectedClass }) => <img src={data} className={selectedClass} />
+    const Picture = ({ data, selectedClass }) => <img src={data} className={selectedClass} />
 
     return (
         <React.Fragment>
             <div className={classes.sideSection} >
-				<Typography variant="h1" component="h1">Danke, {props.location.state.name}!</Typography>
+                <Typography variant="h1" component="h1">Danke, {props.location.state.name}!</Typography>
                 <Typography variant="subtitle1" component="p">Mit 3 einfachen Schritten Ihr Konto einrichten</Typography>
 
                 <div className={classes.dataSpaceHolder} />
 
                 <div className={classes.dataSection}>
                     <div className={classes.rectangleStyle}>
-						{/* TODO: src ersetzten und png in ../../images löschen*/}
-						<Picture data={props.location.state.idPhotoFrontMinimized} selectedClass={classes.imgIDStyle} />
-						<Picture data={props.location.state.idPhotoBack} selectedClass={classes.imgIDStyle} />
+                        <Picture data={props.location.state.idPhotoFrontMinimized} selectedClass={classes.imgIDStyle} />
+                        <Picture data={props.location.state.idPhotoBack} selectedClass={classes.imgIDStyle} />
                     </div>
                     <div className={classes.infoBox}>
                         <div className={classes.cardInfoTextStyle} >
@@ -170,12 +162,13 @@ const Thanks = (props) => {
                 <div className={classes.rectangleSpaceHolder} />
 
                 <div className={classes.dataSection}>
+
                     <div className={classes.rectangleStyle}>
-                        {/* TODO: src ersetzten und png in ../../images löschen*/}
-                        <img className={classes.imgStyle} src={IDBild} alt="Picture ID" />
-                        <img className={classes.imgStyle} src={IDBild} alt="Picture Selfie 1" />
-                        <img className={classes.imgStyle} src={IDBild} alt="Picture Selfie 2" />
+                        <img className={classes.imgStyle} src={props.location.state.idPhotoFront} alt="Picture ID" />
+                        <img className={classes.imgStyle} src={props.location.state.livenessDetectionFirstPicture} alt="Picture Selfie 1" />
+                        <img className={classes.imgStyle} src={props.location.state.livenessDetectionSecondPicture} alt="Picture Selfie 2" />
                     </div>
+
                     <div className={classes.infoBox}>
                         <div className={classes.pictureInfo}>
                             <SuccessIcon className={classes.successIcon} />
