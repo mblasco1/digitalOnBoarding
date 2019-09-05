@@ -268,7 +268,8 @@ const PhoneNumber = (props) => {
                         onBlur={handleChange}
                         label="Postleitzahl"
                         className={classes.textFieldZip}
-                        margin="normal" />
+                        margin="normal"
+                        type="number" pattern="[0-9]*" inputmode="numeric" />
 
                     <TextField id="city"
                         label="Stadt"

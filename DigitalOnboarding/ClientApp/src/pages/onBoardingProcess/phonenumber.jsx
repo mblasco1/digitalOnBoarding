@@ -123,7 +123,8 @@ const PhoneNumber = (props) => {
 					helperText={!phoneValidation.phone.isValid && phoneValidation.phone.touched ? phoneValidation.phone.message : ""}
 					onBlur={handleChange}
 					className={classes.textFieldPhone}
-					margin="normal" />
+                    margin="normal"
+                    type="number" pattern="[0-9]*" inputmode="numeric"/>
 
 
 				<Fab onClick={nextStep} aria-label="arrow" className={classes.fab}>
