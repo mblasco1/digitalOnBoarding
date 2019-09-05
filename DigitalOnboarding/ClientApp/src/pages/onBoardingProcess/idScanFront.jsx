@@ -82,6 +82,18 @@ const IdScanFront = (props) => {
 
     useEffect(() => {
         setStep(2);
+
+        window.addEventListener('orientationchange', function () {
+            //need timeout otherwise child component renders before the parent 
+            setTimeout(function () {
+                var element = document.getElementById("video");
+                if (element != null) {
+                    element.scrollIntoViewIfNeeded();
+                }
+            }, 250);
+        });
+
+
         // Get access to the camera
         if (navigator.mediaDevices && navigator.mediaDevices.getUserMedia) {
             // Not adding `{ audio: true }` since we only want video now

@@ -49,6 +49,16 @@ const IdScanBack = (props) => {
 	useEffect(() => {
 		setStep(2);
 
+        window.addEventListener('orientationchange', function () {
+            //need timeout otherwise child component renders before the parent 
+            setTimeout(function () {
+                var element = document.getElementById("video");
+                if (element != null) {
+                    element.scrollIntoViewIfNeeded();
+                }
+            }, 250);
+        });
+
 		if (window.microblinkInitialized) {
 			return; // there seems to be no way to remove listeners from microblink
 		}
@@ -95,7 +105,7 @@ const IdScanBack = (props) => {
 		<React.Fragment>
 			<TitleSection title="ID Rückseite" Icon={ScanIcon} subtitle="Bitte die Rückseite Ihrer ID scannen" />
 			<div className={classes.actionSection}>
-				<microblink-ui-web class={classes.microblinkContainer} tabs autoscroll>
+                <microblink-ui-web class={classes.microblinkContainer} tabs autoscroll id="video">
 					<img slot="loader-image" class="hide-until-component-is-loaded" src="https://microblink.com/bundles/microblinkmicroblink/images/loading-animation-on-blue.gif" />
 					<span slot="labels.openLinkAtSmartphone" class="hide-until-component-is-loaded"  >Please open <b>exchange link</b> at the smartphone with <b>QR</b> reader.</span>
 				</microblink-ui-web>
