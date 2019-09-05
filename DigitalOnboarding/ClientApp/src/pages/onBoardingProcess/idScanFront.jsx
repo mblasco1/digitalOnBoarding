@@ -10,7 +10,6 @@ import { onBoardingObject, onBoardingUtilities } from "../../resources/onBoardin
 //import components
 import TitleSection from "./components/_titleSection";
 
-
 const styles = (theme) => ({
     actionSection: {
         marginTop: 50,
@@ -18,6 +17,8 @@ const styles = (theme) => ({
         position: 'relative',
         [theme.breakpoints.down(800)]: {
             marginTop: 0,
+            display: 'flex',
+            justifyContent: 'center',
         }
     },
     videoElement: {
@@ -36,7 +37,7 @@ const styles = (theme) => ({
             width: 400,
             height: 240,
         }
-    }
+    },
 });
 
 const IdScanFront = (props) => {
@@ -76,6 +77,7 @@ const IdScanFront = (props) => {
         });
 
     }
+
     function getStreamConstraint() {
         /*
          * Example working with more cameras:
@@ -88,12 +90,27 @@ const IdScanFront = (props) => {
             for (const deviceInfo of data) {
                 if (deviceInfo.kind === 'videoinput') {
                     videoOptions.push(deviceInfo.deviceId);
+                    console.log(deviceInfo.label);
+
+                    //display all videoinput devices
+                    
+                    var node = document.createElement("LI");
+                    var textnode = document.createTextNode(deviceInfo.label);  
+                    node.appendChild(textnode); 
+                    document.getElementById("deviceInfos").appendChild(node); 
+                    
                 }
             }
         })
 
         var cameraIndexToUse = videoOptions.length - 1; //if there is more than 1, the last one should be the back-camera --> [FRONT, BACK,....]
-        const videoSource = videoOptions[0];
+        const videoSource = videoOptions[cameraIndexToUse];
+
+        var node = document.createElement("LI");
+        var textnode = document.createTextNode(videoSource + 'is used');
+        node.appendChild(textnode);
+        document.getElementById("deviceInfos").appendChild(node); 
+
         const constraint = { video: { deviceId: videoSource ? { exact: videoSource } : undefined } };
 
         console.log(constraint);
@@ -163,6 +180,7 @@ const IdScanFront = (props) => {
                 <video ref={videoContainer} className={[classes.videoElement]} id="video" autoPlay></video>
                 <canvas ref={canvasContainer} className={classes.canvasElement} />
             </div>
+            <div id="deviceInfos"></div>
         </React.Fragment>
     );
 }
