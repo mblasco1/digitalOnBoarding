@@ -26,6 +26,13 @@ const styles = theme => ({
         }
     },
 
+    rectangleStyleIDCards: {
+        [theme.breakpoints.down(800)]: {
+            flexFlow: 'column',
+        }
+    },
+
+
     rectangleSpaceHolder: {
         height: '18px'
     },
@@ -106,6 +113,12 @@ const styles = theme => ({
         marginLeft: 'auto',
         marginRight: 'auto',
         textAlign: 'center',
+
+        [theme.breakpoints.down(800)]: {
+            marginTop: 5,
+            maxWidth: 180,
+            maxHeight: 80,
+        }
     },
 
     imgStyle: {
@@ -148,7 +161,7 @@ const Thanks = (props) => {
                 <div className={classes.dataSpaceHolder} />
 
                 <div className={classes.dataSection}>
-                    <div className={classes.rectangleStyle}>
+                    <div className={[classes.rectangleStyle, classes.rectangleStyleIDCards].join(' ')}>
                         <Picture data={props.location.state.idPhotoFrontMinimized} selectedClass={classes.imgIDStyle} />
                         <Picture data={props.location.state.idPhotoBack} selectedClass={classes.imgIDStyle} />
                     </div>
