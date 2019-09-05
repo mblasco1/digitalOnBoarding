@@ -22,7 +22,6 @@ const styles = (theme) => ({
         }
     },
     videoElement: {
-        transform: 'rotateY(180deg)',
         '-webkit-transform': 'rotateY(180deg)', /* Safari and Chrome */
         '-moz-transform': 'rotateY(180deg)', /* Firefox */
         position: 'absolute',
@@ -30,6 +29,9 @@ const styles = (theme) => ({
         [theme.breakpoints.down(800)]: {
             width: 400,
             height: 240,
+            transform: 'rotate(90deg)',
+            '-webkit-transform': 'rotateY(360deg)', /* Safari and Chrome */
+            '-moz-transform': 'rotateY(360deg)', /* Firefox */
         }
     },
     canvasElement: {
@@ -78,76 +80,64 @@ const IdScanFront = (props) => {
 
     }
 
-    function getStreamConstraint() {
-        /*
-         * Example working with more cameras:
-         * try out: https://simpl.info/getusermedia/sources/
-         * code :   https://github.com/samdutton/simpl/blob/gh-pages/getusermedia/sources/js/main.js#L39
-         * */
-
-        var videoOptions = [];
-        navigator.mediaDevices.enumerateDevices().then((data) => {
-            for (const deviceInfo of data) {
-                if (deviceInfo.kind === 'videoinput') {
-                    videoOptions.push(deviceInfo.deviceId);
-                    console.log(deviceInfo.label);
-
-                    //display all videoinput devices
-                    
-                    var node = document.createElement("LI");
-                    var textnode = document.createTextNode(deviceInfo.label);  
-                    node.appendChild(textnode); 
-                    document.getElementById("deviceInfos").appendChild(node); 
-                    
-                }
-            }
-        })
-
-        var cameraIndexToUse = videoOptions.length - 1; //if there is more than 1, the last one should be the back-camera --> [FRONT, BACK,....]
-        const videoSource = videoOptions[cameraIndexToUse];
-
-        var node = document.createElement("LI");
-        var textnode = document.createTextNode(videoSource + 'is used');
-        node.appendChild(textnode);
-        document.getElementById("deviceInfos").appendChild(node); 
-
-        const constraint = { video: { deviceId: videoSource ? { exact: videoSource } : undefined } };
-
-        console.log(constraint);
-        return constraint;
-    }
-
-
     useEffect(() => {
         setStep(2);
         // Get access to the camera
         if (navigator.mediaDevices && navigator.mediaDevices.getUserMedia) {
             // Not adding `{ audio: true }` since we only want video now
+            var videoOptions = [];
+            var constraint;
+            /*
+            * Example working with more cameras:
+            * try out: https://simpl.info/getusermedia/sources/
+            * code :   https://github.com/samdutton/simpl/blob/gh-pages/getusermedia/sources/js/main.js#L39
+            * */
+            navigator.mediaDevices.enumerateDevices().then((data) => {
+                for (const deviceInfo of data) {
+                    if (deviceInfo.kind === 'videoinput') {
+                        videoOptions.push(deviceInfo.deviceId);
 
-            navigator.mediaDevices.getUserMedia(getStreamConstraint()).then(function (stream) {
-                videoContainer.current.width = 640;
-                videoContainer.current.height = 480;
-                videoContainer.current.srcObject = stream;
-                videoContainer.current.selectedStream = stream;
+                        //display all videoinput devices
+                        /*
+                        var node = document.createElement("LI");
+                        var textnode = document.createTextNode(deviceInfo.label);
+                        node.appendChild(textnode);
+                        document.getElementById("deviceInfos").appendChild(node);
+                        */
+                    }
+                }
+
+            }).then(() => {
+                var cameraIndexToUse = videoOptions.length - 1; //if there is more than 1, the last one should be the back-camera --> [FRONT, BACK,....]
+                const videoSource = videoOptions[cameraIndexToUse];
+                constraint = { video: { deviceId: videoSource ? { exact: videoSource } : undefined } };
+
+            }).then(() => {
+                navigator.mediaDevices.getUserMedia(constraint).then(function (stream) {
+                    videoContainer.current.width = 640;
+                    videoContainer.current.height = 480;
+                    videoContainer.current.srcObject = stream;
+                    videoContainer.current.selectedStream = stream;
 
 
-                videoContainer.current.oncanplay = function playStream() {
-                    videoContainer.current.play();
-                    setIsRunning(true);
+                    videoContainer.current.oncanplay = function playStream() {
+                        videoContainer.current.play();
+                        setIsRunning(true);
 
-                    canvasContainer.current.width = 640;
-                    canvasContainer.current.height = 480;
+                        canvasContainer.current.width = 640;
+                        canvasContainer.current.height = 480;
 
-                    window.addEventListener('resize', resizeCanvas, false);
-                    resizeCanvas();
-                };
+                        window.addEventListener('resize', resizeCanvas, false);
+                        resizeCanvas();
+                    };
 
-                videoContainer.current.stop = function unmountStream() {
-                    videoContainer.current.selectedStream.getTracks()[0].stop();
-                };
+                    videoContainer.current.stop = function unmountStream() {
+                        videoContainer.current.selectedStream.getTracks()[0].stop();
+                    };
+                })
+
             });
         }
-
     }, []);
 
     function resizeCanvas() {
