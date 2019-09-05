@@ -46,8 +46,6 @@ const styles = theme => ({
 const Thanks = (props) => {
     const { classes } = props;
 
-    console.log(props);
-
     useEffect(() => {
         props.setStep(4);
         onBoardingUtilities.copyFromObject(onBoardingObject, props.location.state);

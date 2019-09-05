@@ -1,14 +1,12 @@
 ﻿//import libs
-import React, { useEffect, useRef, useState } from "react";
+import React, { useEffect } from "react";
 import { withStyles } from "@material-ui/core";
 import Fab from "@material-ui/core/Fab";
 import ArrowIcon from "@material-ui/icons/ArrowForward";
-import $ from 'jquery';
 
 //import resources
 import { ReactComponent as PictoSignatur } from "../../images/Picto_Signatur.svg";
 import { ReactComponent as CloudDownload } from "../../images/cloud-download-95.svg";
-import onBoardingObject from "../../resources/onBoardingObject";
 
 //import components
 import TitleSection from "./components/_titleSection";
