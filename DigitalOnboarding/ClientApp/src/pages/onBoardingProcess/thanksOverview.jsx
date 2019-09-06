@@ -1,5 +1,5 @@
 ﻿//import libs
-import React, { useEffect } from "react";
+import React, { useEffect, useRef } from "react";
 import { withStyles, Typography } from "@material-ui/core";
 import Fab from "@material-ui/core/Fab";
 import ArrowIcon from "@material-ui/icons/ArrowForward";
@@ -141,9 +141,20 @@ const styles = theme => ({
 
 const Thanks = (props) => {
     const { classes } = props;
+    const canvasContainer = useRef(null);
 
     useEffect(() => {
         props.setStep(4);
+
+
+        var imgObject = new Image();
+        imgObject.src = props.location.state.idPhotoBack;
+        const ctx = canvasContainer.current.getContext("2d");
+        imgObject.onload = () => {
+            ctx.drawImage(imgObject, 360, 190, 1300, 1250, 0, 0, 640, 480);
+        }
+
+
     }, []);
 
     const nextStep = () => {
@@ -163,7 +174,7 @@ const Thanks = (props) => {
                 <div className={classes.dataSection}>
                     <div className={[classes.rectangleStyle, classes.rectangleStyleIDCards].join(' ')}>
                         <Picture data={props.location.state.idPhotoFrontMinimized} selectedClass={classes.imgIDStyle} />
-                        <Picture data={props.location.state.idPhotoBack} selectedClass={classes.imgIDStyle} />
+                        <canvas ref={canvasContainer} className={classes.imgIDStyle} />
                     </div>
                     <div className={classes.infoBox}>
                         <div className={classes.cardInfoTextStyle} >

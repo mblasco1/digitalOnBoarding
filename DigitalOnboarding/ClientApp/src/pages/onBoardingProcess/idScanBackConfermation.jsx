@@ -47,7 +47,7 @@ const IdScanBackConfermation = (props) => {
 			//replace with microblink object as soon as they support swiss ID's
 			//ctx.drawImage(imgObject, 75, 50, 850, 650, 0, 0, 575, 350);
             //ctx.drawImage(imgObject, 340, 180, 600, 400, 0, 0, 640, 480);
-            ctx.drawImage(imgObject, 360, 190, 1200, 1100, 0, 0, 640, 480);
+            ctx.drawImage(imgObject, 360, 190, 1300, 1250, 0, 0, 640, 480);
             console.log('================');
 			//ctx.drawImage(imgObject, 0, 0);
 		}
