@@ -188,7 +188,7 @@ const Thanks = (props) => {
                 <div className={classes.dataSection}>
 
                     <div className={classes.rectangleStyle}>
-                        <img className={classes.imgStyle} src={props.location.state.idPhotoFront} alt="Picture ID" />
+                        <img className={classes.imgStyle} src={props.location.state.idPhotoFrontIdPicture} alt="Picture ID (coming soon)" />
                         <img className={classes.imgStyle} src={props.location.state.livenessDetectionFirstPicture} alt="Picture Selfie 1" />
                         <img className={classes.imgStyle} src={props.location.state.livenessDetectionSecondPicture} alt="Picture Selfie 2" />
                     </div>
