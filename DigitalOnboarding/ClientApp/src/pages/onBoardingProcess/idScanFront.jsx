@@ -9,6 +9,7 @@ import { onBoardingObject, onBoardingUtilities } from "../../resources/onBoardin
 
 //import components
 import TitleSection from "./components/_titleSection";
+import { string } from "prop-types";
 
 const styles = (theme) => ({
     actionSection: {
@@ -42,11 +43,12 @@ const styles = (theme) => ({
     },
 });
 
+
 const IdScanFront = (props) => {
     const { classes, setStep } = props;
     const canvasContainer = useRef(null);
     const videoContainer = useRef(null);
-    const [timer, setTimer] = useState(10);
+    const [timer, setTimer] = useState(1);
     const [isRunning, setIsRunning] = useState(false);
 
     useInterval(() => {
@@ -75,7 +77,10 @@ const IdScanFront = (props) => {
             onBoardingUtilities.copyFromObject(onBoardingObject, props.location.state);
             onBoardingObject.idPhotoFront = dataUrl;
 
-            props.history.push('/onboarding/idscanfrontconfermation', onBoardingObject);
+            tryValidateIdScanFront(dataUrl);
+
+            console.log("run over await");
+            //props.history.push('/onboarding/idscanfrontconfermation', onBoardingObject);
         });
 
     }
@@ -175,6 +180,162 @@ const IdScanFront = (props) => {
         });
     }
 
+    const regulaForensicsURL = 'https://api.regulaforensics.com/webapi';
+    var tryValidateIdScanFront = async function (idPhotoFront) {
+        const TRANSACTIONSTATUS_COMPLETED = 3;
+        const TRANSACTIONSTATUS_ERROR = 4;
+
+        await authenticate();
+        await submitTransaction(idPhotoFront);
+
+        let status = await getTransactionStatus();
+        while (status != TRANSACTIONSTATUS_COMPLETED) {
+            //TODO Sleep einbauen?...
+            status = await getTransactionStatus();
+            if (status == TRANSACTIONSTATUS_ERROR) {
+                break;
+            }
+        }
+        if (status == TRANSACTIONSTATUS_ERROR) {
+            //TODO: Error displayed
+        } else {
+            await getImages();
+
+            //continue with image processing
+            console.log("lets start to read results");
+            const RESULT_TYPE_MRZ_OCR_EXTENDED = 15;
+            await getTransactionResultJson(RESULT_TYPE_MRZ_OCR_EXTENDED);
+        }
+    }
+
+    let xToken = "";
+    //regulaForensics
+    var authenticate = async function () {
+        let response = await fetch(regulaForensicsURL + '/Authentication/Authenticate', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify({
+                userId: 'TestUser',
+                Password: 'Regul@SdkTest'
+            })
+        });
+
+        for (var pair of response.headers.entries()) {
+            if (pair[0] == 'x-token') {
+                xToken = pair[1];
+            }
+        }
+
+        console.log("get x-token");
+        console.log(xToken);
+
+    }
+
+    let transactionId = "";
+    var submitTransaction = async function (idPhotoFront) {
+        console.log("sendIdScanFront");
+
+        //capabilities
+        const OCR_MRZ = 0x00000040;
+        const OCR_Visual_Text = 0x00000080;
+
+        var capabilities = 252;
+        //Authenticity
+        const RPRM_Authenticity_None = 0;
+
+        //LightIndex
+        const RPRM_Light_White_Full = 6;
+
+        var requestURL = regulaForensicsURL + '/Transaction2/SubmitTransaction?capabilities='.concat(capabilities, '&authenticity=', RPRM_Authenticity_None)
+
+        //SubmitTransaction
+        let response = await fetch(requestURL, {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+                'X-Token': xToken
+            },
+            body:'[' + JSON.stringify({
+                Base64ImageString: idPhotoFront,
+                Format: '.jpeg',
+                LightIndex: RPRM_Light_White_Full,
+                PageIndex: 0
+
+            }) + ']'
+        });
+
+        transactionId = await response.json()
+    }
+
+    var getTransactionStatus = async function () {
+        var requestURL = regulaForensicsURL + '/Transaction2/GetTransactionStatus?transactionId='.concat(transactionId)
+
+        //SubmitTransaction
+        let response = await fetch(requestURL, {
+            method: 'GET',
+            headers: {
+                'Content-Type': 'application/json',
+                'X-Token': xToken
+            }
+        });
+        let result = await response.json()
+        return result.Status;
+
+        /*
+         * 0 = Unknown
+         * 1 = Submitted
+         * 2 = InProgress
+         * 3 = Completed
+         * 4 = Error
+         */
+    }
+
+    var getTransactionResultJson = async function (resultType) {
+        var requestURL = regulaForensicsURL + '/Transaction2/GetTransactionResultJson?transactionId='.concat(transactionId, '&resultType=', resultType)
+
+        //SubmitTransaction
+        let response = await fetch(requestURL, {
+            method: 'GET',
+            headers: {
+                'Content-Type': 'application/json',
+                'X-Token': xToken
+            },
+        });
+        console.log('getTransactionResultJson');
+        console.log(response);
+
+        
+        let result = await response.json();
+        console.log('result');
+        console.log(result);
+        //ACHTUNG, wenn nichts gefunden wurde ist result null
+        if (result != null) {
+            console.log(result[0].ListVerifiedFields.pFieldMaps)
+            //TODO: Daten die erhalten werden in onBoardingObject speichern
+        }
+
+        debugger;
+    }
+
+    var getImages = async function () {
+        var requestURL = regulaForensicsURL + '/Transaction2/GetImages?transactionId='.concat(transactionId)
+
+        //SubmitTransaction
+        let response = await fetch(requestURL, {
+            method: 'GET',
+            headers: {
+                'Content-Type': 'application/json',
+                'X-Token': xToken
+            },
+        });
+        let result = await response.json()
+        //console.log(result);
+        //TODO: Prüfen ob ein Bild vorhanden ist (ansonsten ist result null)
+        onBoardingObject.idPhotoFront = result[0].Base64ImageString;
+    }
+    
     return (
         <React.Fragment>
             <TitleSection title="ID Vorderseite" Icon={ScanIcon} subtitle="Bitte die Vorderseite Ihrer ID scannen" />
