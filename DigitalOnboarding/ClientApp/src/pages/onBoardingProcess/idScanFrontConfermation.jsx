@@ -41,6 +41,14 @@ const styles = theme => ({
         }
     },
 
+    imgIDStyle: {
+        width: 480,
+        height: 360,
+        [theme.breakpoints.down(800)]: {
+            width: 320,
+            height: 200,
+        }
+    },
 });
 
 const IdScanFrontConfermation = (props) => {
@@ -52,13 +60,19 @@ const IdScanFrontConfermation = (props) => {
 
         var imgObject = new Image();
         imgObject.src = props.location.state.idPhotoFront;
-        const ctx = canvasContainer.current.getContext("2d");
+
+        console.log("idscanfrontconfermation");
+        console.log(imgObject.src);
+        console.log(props.location.state.idPhotoFront);
+
+        //const ctx = canvasContainer.current.getContext("2d");
 
         imgObject.onload = () => {
             //replace with microblink object as soon as they support swiss ID's
             //slice image to card - drawImage( image, source_x, source_y, w, h, dest_x, dest_y, w, h );
             //ctx.drawImage(imgObject, 115, 105, 420, 260, 0, 0, 480, 360);
-            ctx.drawImage(imgObject, 115, 105, 650, 600, 0, 0, 480, 360);
+            //ctx.drawImage(imgObject, 115, 105, 650, 600, 0, 0, 480, 360);
+            //ctx.drawImage(imgObject);
             canvasContainer.current.toBlob(getCardImage, 'image/jpeg');
         }
 
@@ -92,12 +106,15 @@ const IdScanFrontConfermation = (props) => {
         });
     }
 
+    const Picture = ({ data, selectedClass }) => <img src={"data:image/jpeg; base64," + data} className={selectedClass} />
+
     return (
         <React.Fragment>
             <TitleSection title="ID Vorderseite" Icon={ScanIcon} subtitle="Die Vorderseite wurde erfolgreich gescannt" />
             <div className={classes.actionSection}>
                 <div>
-                    <canvas ref={canvasContainer} className={classes.canvasSize}/>
+                    
+                    <Picture data={props.location.state.idPhotoFront} selectedClass={classes.imgIDStyle} />
                 </div>
                 <div className={classes.confirm}>
                     <Fab onClick={nextStep} aria-label="arrow" className={classes.fab}>
