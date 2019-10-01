@@ -225,7 +225,7 @@ const PhoneNumber = (props) => {
             onBoardingObject.email = identificationValidation.email.value;
             onBoardingObject.nationality = nationality;
 
-            props.history.push("/onBoarding/idscanfront", onBoardingObject);
+            props.history.push("/onBoarding/idscanfrontoverview", onBoardingObject);
         }
     }
 

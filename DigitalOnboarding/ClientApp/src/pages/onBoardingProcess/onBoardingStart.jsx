@@ -8,6 +8,7 @@ import withStepper from "./components/_withStepper";
 //import components
 import Phonenumber from "./phonenumber";
 import Identification from "./identification";
+import IdScanFrontOverview from "./idScanFrontOverview";
 import IdScanFront from "./idScanFront";
 import IdScanFrontConfermation from "./idScanFrontConfermation";
 import IdScanBack from "./idScanBack";
@@ -44,7 +45,8 @@ const OnBoardingStart = (props) => {
 			{/* if path not found welcome page will be displayed  */}
 			<Route path="/onBoarding/phonenumber" render={routeProps => (<Phonenumber {...routeProps} showSuccessSnack={props.showSuccessSnack} goToNextStep={props.nextStep} setStep={props.setStep} />)} />
 			<Route path="/onBoarding/identification" render={routeProps => (<Identification {...routeProps} showSuccessSnack={props.showSuccessSnack} goToNextStep={props.nextStep} setStep={props.setStep} />)} />
-			<Route path="/onBoarding/idscanfront" render={routeProps => (<IdScanFront {...routeProps} showSuccessSnack={props.showSuccessSnack} goToNextStep={props.nextStep} setStep={props.setStep} />)} />
+            <Route path="/onBoarding/idscanfrontOverview" render={routeProps => (<IdScanFrontOverview {...routeProps} showSuccessSnack={props.showSuccessSnack} goToNextStep={props.nextStep} setStep={props.setStep} />)} />
+            <Route path="/onBoarding/idscanfront" render={routeProps => (<IdScanFront {...routeProps} showSuccessSnack={props.showSuccessSnack} goToNextStep={props.nextStep} setStep={props.setStep} />)} />
 			<Route path="/onBoarding/idscanfrontconfermation" render={routeProps => (<IdScanFrontConfermation showSuccessSnack={props.showSuccessSnack} {...routeProps} goToNextStep={props.nextStep} setStep={props.setStep} />)} />
 			<Route path="/onBoarding/idscanback" render={routeProps => (<IdScanBack {...routeProps} showSuccessSnack={props.showSuccessSnack} goToNextStep={props.nextStep} setStep={props.setStep} />)} />
 			<Route path="/onBoarding/idscanbackconfermation" render={routeProps => (<IdScanBackConfermation showSuccessSnack={props.showSuccessSnack} {...routeProps} goToNextStep={props.nextStep} setStep={props.setStep} />)} />

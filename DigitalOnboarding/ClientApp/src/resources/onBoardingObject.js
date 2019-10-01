@@ -14,7 +14,8 @@
 	'idPhotoBackMicroblinkObject': null,
 	'livenessDetectionFirstPicture': '',
 	'livenessDetectionSecondPicture': '',
-	'bioIdLivenessObject': null
+    'bioIdLivenessObject': null,
+    'isFileUploaderUsed': null,
 }
 
 const onBoardingUtilities = {
@@ -39,7 +40,8 @@ const onBoardingUtilities = {
 			copyTo.idPhotoBackMicroblinkObject = copyFrom.idPhotoBackMicroblinkObject;
 			copyTo.livenessDetectionFirstPicture = copyFrom.livenessDetectionFirstPicture;
 			copyTo.livenessDetectionSecondPicture = copyFrom.livenessDetectionSecondPicture;
-			copyTo.bioIdLivenessObject = copyFrom.bioIdLivenessObject;
+            copyTo.bioIdLivenessObject = copyFrom.bioIdLivenessObject;
+            copyTo.isFileUploaderUsed = copyFrom.isFileUploaderUsed;
 
 			return copyTo;
 		}
