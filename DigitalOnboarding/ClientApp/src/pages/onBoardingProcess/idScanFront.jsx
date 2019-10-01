@@ -57,6 +57,9 @@ const IdScanFront = (props) => {
             //TODO: if we need data, parse them
             //let data = await reulaForensics.getTransactionResultJson(transactionId, RegulaForensics.eRPRM_ResultType.MRZ_OCR_Extended, xToken);
             //console.log("data: " + data);
+
+
+            //TODO: Check or Repead step if id is not OK
         }
     }
 
