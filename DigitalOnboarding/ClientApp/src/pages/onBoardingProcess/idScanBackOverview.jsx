@@ -9,8 +9,8 @@ import { onBoardingObject, onBoardingUtilities } from "../../resources/onBoardin
 //import components
 import TitleSection from "./components/_titleSection";
 
-const styles = (theme) => ({
 
+const styles = (theme) => ({
     navigationButtons: {
         display: 'flex',
         justifyContent: 'center',
@@ -34,7 +34,7 @@ const styles = (theme) => ({
     },
 });
 
-const IdScanFrontOverview = (props) => {
+const IdScanBack = (props) => {
     const { classes, setStep } = props;
 
     useEffect(() => {
@@ -52,18 +52,17 @@ const IdScanFrontOverview = (props) => {
     function chooseOpperation(isFileUploaderUsed) {
         onBoardingUtilities.copyFromObject(onBoardingObject, props.location.state);
         onBoardingObject.isFileUploaderUsed = isFileUploaderUsed;
-        props.history.push('/onboarding/idscanfront', onBoardingObject);
+        props.history.push('/onboarding/idscanback', onBoardingObject);
     }
 
     return (
         <React.Fragment>
-            <TitleSection title="ID Vorderseite" Icon={ScanIcon} subtitle="Bitte die Vorderseite Ihrer ID scannen" />
+            <TitleSection title="ID Rückseite" Icon={ScanIcon} subtitle="Bitte die Rückseite Ihrer ID scannen" />
             <div id="navigationWhatToUse" className={classes.navigationButtons}>
                 <button className={classes.button} onClick={useFileUploaderFunction}>Upload ID Card</button>
                 <button className={classes.button} onClick={useVideoScreenShotFunction}>Use Webcam for ID Card</button>
             </div>
         </React.Fragment>
     );
-
 }
-export default withStyles(styles)(IdScanFrontOverview);
+export default withStyles(styles)(IdScanBack);

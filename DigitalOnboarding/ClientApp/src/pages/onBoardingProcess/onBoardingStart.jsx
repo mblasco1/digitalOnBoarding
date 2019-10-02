@@ -11,6 +11,7 @@ import Identification from "./identification";
 import IdScanFrontOverview from "./idScanFrontOverview";
 import IdScanFront from "./idScanFront";
 import IdScanFrontConfermation from "./idScanFrontConfermation";
+import IdScanBackOverview from "./idScanBackOverview";
 import IdScanBack from "./idScanBack";
 import IdScanBackConfermation from "./idScanBackConfermation";
 import LivenessCheck from './livenessCheck';
@@ -45,14 +46,19 @@ const OnBoardingStart = (props) => {
 			{/* if path not found welcome page will be displayed  */}
 			<Route path="/onBoarding/phonenumber" render={routeProps => (<Phonenumber {...routeProps} showSuccessSnack={props.showSuccessSnack} goToNextStep={props.nextStep} setStep={props.setStep} />)} />
 			<Route path="/onBoarding/identification" render={routeProps => (<Identification {...routeProps} showSuccessSnack={props.showSuccessSnack} goToNextStep={props.nextStep} setStep={props.setStep} />)} />
-            <Route path="/onBoarding/idscanfrontOverview" render={routeProps => (<IdScanFrontOverview {...routeProps} showSuccessSnack={props.showSuccessSnack} goToNextStep={props.nextStep} setStep={props.setStep} />)} />
+
+            <Route path="/onBoarding/idscanfrontoverview" render={routeProps => (<IdScanFrontOverview {...routeProps} showSuccessSnack={props.showSuccessSnack} goToNextStep={props.nextStep} setStep={props.setStep} />)} />
             <Route path="/onBoarding/idscanfront" render={routeProps => (<IdScanFront {...routeProps} showSuccessSnack={props.showSuccessSnack} goToNextStep={props.nextStep} setStep={props.setStep} />)} />
 			<Route path="/onBoarding/idscanfrontconfermation" render={routeProps => (<IdScanFrontConfermation showSuccessSnack={props.showSuccessSnack} {...routeProps} goToNextStep={props.nextStep} setStep={props.setStep} />)} />
-			<Route path="/onBoarding/idscanback" render={routeProps => (<IdScanBack {...routeProps} showSuccessSnack={props.showSuccessSnack} goToNextStep={props.nextStep} setStep={props.setStep} />)} />
+
+            <Route path="/onBoarding/idscanbackoverview" render={routeProps => (<IdScanBackOverview {...routeProps} showSuccessSnack={props.showSuccessSnack} goToNextStep={props.nextStep} setStep={props.setStep} />)} />
+            <Route path="/onBoarding/idscanback" render={routeProps => (<IdScanBack {...routeProps} showSuccessSnack={props.showSuccessSnack} goToNextStep={props.nextStep} setStep={props.setStep} />)} />
 			<Route path="/onBoarding/idscanbackconfermation" render={routeProps => (<IdScanBackConfermation showSuccessSnack={props.showSuccessSnack} {...routeProps} goToNextStep={props.nextStep} setStep={props.setStep} />)} />
-			<Route path="/onBoarding/livenessCheck" render={routeProps => (<LivenessCheck {...routeProps} showSuccessSnack={props.showSuccessSnack} goToNextStep={props.nextStep} setStep={props.setStep} />)} />
+
+            <Route path="/onBoarding/livenessCheck" render={routeProps => (<LivenessCheck {...routeProps} showSuccessSnack={props.showSuccessSnack} goToNextStep={props.nextStep} setStep={props.setStep} />)} />
 			<Route path="/onBoarding/livenessCheckOverview" render={routeProps => (<LivenessCheckOverview {...routeProps} showSuccessSnack={props.showSuccessSnack} goToNextStep={props.nextStep} setStep={props.setStep} />)} />
-			<Route path="/onBoarding/thanks" render={routeProps => (<Thanks {...routeProps} goToNextStep={props.nextStep} showSuccessSnack={props.showSuccessSnack} setStep={props.setStep} />)} />
+
+            <Route path="/onBoarding/thanks" render={routeProps => (<Thanks {...routeProps} goToNextStep={props.nextStep} showSuccessSnack={props.showSuccessSnack} setStep={props.setStep} />)} />
 			<Route path="/onBoarding/thanksOverview" render={routeProps => (<ThanksOverview {...routeProps} showSuccessSnack={props.showSuccessSnack} goToNextStep={props.nextStep} setStep={props.setStep} />)} />
 			<Route path="/onBoarding/signContract" render={routeProps => (<SignContract {...routeProps} showSuccessSnack={props.showSuccessSnack} goToNextStep={props.nextStep} setStep={props.setStep} />)} />
 		</Switch>

@@ -9,6 +9,9 @@ import { onBoardingObject, onBoardingUtilities } from "../../resources/onBoardin
 //import components
 import TitleSection from "./components/_titleSection";
 
+import { RegulaForensics } from "../../components/RegulaForensics";
+import VideoScreenshot from "./components/videoScreenshot";
+import UploadButton from "./components/uploadButton";
 
 const styles = theme => ({
 	actionSection: {
@@ -48,68 +51,64 @@ const IdScanBack = (props) => {
 
 	useEffect(() => {
 		setStep(2);
-
-        window.addEventListener('orientationchange', function () {
-            //need timeout otherwise child component renders before the parent 
-            setTimeout(function () {
-                var element = document.getElementById("video");
-                if (element != null) {
-                    element.scrollIntoViewIfNeeded();
-                }
-            }, 250);
-        });
-
-		if (window.microblinkInitialized) {
-			return; // there seems to be no way to remove listeners from microblink
-		}
-
-		window.microblinkInitialized = true;
-		window.Microblink.SDK.SetEndpoint('/api/microblink');
-		window.Microblink.SDK.SetRecognizers(['MRTD']);
-
-		window.Microblink.SDK.RegisterListener({
-			onScanSuccess: (data) => {
-				blobToDataURL(data.sourceBlob).then((dataUrl) => {
-
-					onBoardingUtilities.copyFromObject(onBoardingObject, props.location.state);
-
-					onBoardingObject.idPhotoBack = dataUrl;
-					onBoardingObject.idPhotoBackMicroblinkObject = data;
-
-					props.history.push('/onboarding/idscanbackconfermation', onBoardingObject);
-
-				});
-			},
-			onScanError: (error) => {
-				console.error('Error from Microblink API is', error);
-
-				//ToDo: smarter error message
-				if (error.summary) {
-					alert(error.summary);
-				}
-			}
-		});
-
 	}, []);
 
-	const blobToDataURL = (blob) => {
-		return new Promise((fulfill, reject) => {
-			let reader = new FileReader();
-			reader.onerror = reject;
-			reader.onload = (e) => fulfill(reader.result);
-			reader.readAsDataURL(blob);
-		});
-	}
+    var callbackFunction = async function chooseImageFile(imgValue) {
+        console.log("Daten callbackFunction");
+        console.log(imgValue);
+        await tryValidateIdScanFront(imgValue);
+        props.history.push('/onboarding/idscanbackconfermation', onBoardingObject);
+    };
+    
+    var tryValidateIdScanFront = async function (idPhotoFront) {
+
+        let regulaForensics = new RegulaForensics();
+        let xToken = await regulaForensics.authenticate();
+        //TODO: Check Authentication...
+        let transactionId = await regulaForensics.submitTransaction(xToken, idPhotoFront, '.jpeg');
+        let status = RegulaForensics.TransactionStatus.Unknown;
+
+        while (status != RegulaForensics.TransactionStatus.Completed) {
+            status = await regulaForensics.getTransactionStatus(transactionId, xToken);
+            if (status == RegulaForensics.TransactionStatus.Error) {
+                break;
+            }
+        }
+
+        if (status == RegulaForensics.TransactionStatus.Error) {
+            //TODO: Error displayed
+        } else {
+            let img = await regulaForensics.getImages(transactionId, xToken);
+            onBoardingUtilities.copyFromObject(onBoardingObject, props.location.state);
+            onBoardingObject.idPhotoBack = img;
+
+            try {
+                //GET Data from IdCard Front
+                let dataOCR = await regulaForensics.getTransactionResultJson(transactionId, RegulaForensics.eRPRM_ResultType.OCRLexicalAnalyze, xToken);
+                onBoardingObject.idPhotoBackDataObject = regulaForensics.getParsedOCRLexicalAnalyzeData(dataOCR);
+            }
+            catch (e) {
+                console.log("Error in parsing data of ID Back (OCRLexicalAnalyze)");
+                console.log(e);
+            }
+            //TODO: Check or Repead step if id is not OK
+        }
+    }
+
+    const body = function GetBodyElement() {
+        if (onBoardingObject.isFileUploaderUsed) {
+            return <UploadButton id='uploadButton' parentCallback={callbackFunction} />;
+        } else {
+            console.log("isFileUploaderUsed");
+            console.log(onBoardingObject.isFileUploaderUsed);
+            return <VideoScreenshot id='videoScreenshot' parentCallback={callbackFunction} />;
+        }
+    }
 
 	return (
 		<React.Fragment>
 			<TitleSection title="ID Rückseite" Icon={ScanIcon} subtitle="Bitte die Rückseite Ihrer ID scannen" />
-			<div className={classes.actionSection}>
-                <microblink-ui-web class={classes.microblinkContainer} tabs autoscroll id="video">
-					<img slot="loader-image" class="hide-until-component-is-loaded" src="https://microblink.com/bundles/microblinkmicroblink/images/loading-animation-on-blue.gif" />
-					<span slot="labels.openLinkAtSmartphone" class="hide-until-component-is-loaded"  >Please open <b>exchange link</b> at the smartphone with <b>QR</b> reader.</span>
-				</microblink-ui-web>
-			</div>
+            {body()}
 		</React.Fragment>
 	);
 }

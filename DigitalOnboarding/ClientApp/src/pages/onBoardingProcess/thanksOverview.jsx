@@ -145,23 +145,13 @@ const Thanks = (props) => {
 
     useEffect(() => {
         props.setStep(4);
-
-
-        var imgObject = new Image();
-        imgObject.src = props.location.state.idPhotoBack;
-        const ctx = canvasContainer.current.getContext("2d");
-        imgObject.onload = () => {
-            ctx.drawImage(imgObject, 360, 190, 1300, 1250, 0, 0, 640, 480);
-        }
-
-
     }, []);
 
     const nextStep = () => {
         props.history.push("/onBoarding/signContract", props.location.state);
     }
 
-    const Picture = ({ data, selectedClass }) => <img src={data} className={selectedClass} />
+    const Picture = ({ data, selectedClass }) => <img src={"data:image/jpeg; base64," + data} className={selectedClass} />
 
     return (
         <React.Fragment>
@@ -173,8 +163,8 @@ const Thanks = (props) => {
 
                 <div className={classes.dataSection}>
                     <div className={[classes.rectangleStyle, classes.rectangleStyleIDCards].join(' ')}>
-                        <Picture data={props.location.state.idPhotoFrontMinimized} selectedClass={classes.imgIDStyle} />
-                        <canvas ref={canvasContainer} className={classes.imgIDStyle} />
+                        <Picture data={props.location.state.idPhotoFront} selectedClass={classes.imgIDStyle} />
+                        <Picture data={props.location.state.idPhotoBack} selectedClass={classes.imgIDStyle} />
                     </div>
                     <div className={classes.infoBox}>
                         <div className={classes.cardInfoTextStyle} >
@@ -186,9 +176,8 @@ const Thanks = (props) => {
                 <div className={classes.rectangleSpaceHolder} />
 
                 <div className={classes.dataSection}>
-
                     <div className={classes.rectangleStyle}>
-                        <img className={classes.imgStyle} src={props.location.state.idPhotoFrontIdPicture} alt="Picture ID (coming soon)" />
+                        <Picture data={props.location.state.idPhotoFrontPortrait} selectedClass={classes.imgStyle} alt="Picture ID"/>
                         <img className={classes.imgStyle} src={props.location.state.livenessDetectionFirstPicture} alt="Picture Selfie 1" />
                         <img className={classes.imgStyle} src={props.location.state.livenessDetectionSecondPicture} alt="Picture Selfie 2" />
                     </div>

@@ -70,7 +70,7 @@ const LivenessCheckOverview = (props) => {
 
         async function executeFakeDetection() {
             //get images
-            let idPhoto = props.location.state.idPhotoFrontMinimized;
+            let idPhoto = props.location.state.idPhotoFrontPortrait;
             let liveimage1 = props.location.state.livenessDetectionFirstPicture;
             let liveimage2 = props.location.state.livenessDetectionSecondPicture;
 
@@ -106,7 +106,8 @@ const LivenessCheckOverview = (props) => {
     const showFailedSnack = () => { setFailedOpen(true); }
     const hideFailedSnack = () => { setFailedOpen(false); }
 
-    const Picture = ({ data }) => <img className={classes.picture} src={data} height="200" />
+    const Picture = ({ data, selectedClass }) => <img className={selectedClass} src={data} height="200" />
+    const PictureSrc = ({ data, selectedClass }) => <img src={"data:image/jpeg; base64," + data} className={selectedClass} height="200"/>
 
     return (
         <React.Fragment>
@@ -116,9 +117,9 @@ const LivenessCheckOverview = (props) => {
                 <div className={classes.pictureCollection}>
                     {props.location.state !== undefined ?
                         <div className={classes.pictureStyle}>
-                            <Picture data={props.location.state.livenessDetectionFirstPicture} />
-                            <Picture data={props.location.state.livenessDetectionSecondPicture} />
-                            <Picture data={props.location.state.idPhotoFrontMinimized} />
+                            <Picture className={classes.picture} data={props.location.state.livenessDetectionFirstPicture} />
+                            <Picture className={classes.picture} data={props.location.state.livenessDetectionSecondPicture} />
+                            <PictureSrc className={classes.picture} data={props.location.state.idPhotoFrontPortrait} />
                         </div>
                         :
                         <div>Ups, da ist was schiefgelaufen....Bitte Liveness Check nochmals durchführen</div>

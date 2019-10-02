@@ -32,7 +32,7 @@ function UploadButton(props) {
 
     return (
         <div className={classes.uploadScetion}>
-            <input accept="image/*" className={classes.input} id="upload-button-file" multiple type="file" onChange={fileChangedHandler} />
+            <input accept="image/*" className={classes.button} id="upload-button-file" multiple type="file" onChange={fileChangedHandler} />
         </div>
     );
 }

@@ -33,14 +33,14 @@ const IdScanFront = (props) => {
 
     var tryValidateIdScanFront = async function (idPhotoFront) {
 
-        let reulaForensics = new RegulaForensics();
-        let xToken = await reulaForensics.authenticate();
+        let regulaForensics = new RegulaForensics();
+        let xToken = await regulaForensics.authenticate();
         //TODO: Check Authentication...
-        let transactionId = await reulaForensics.submitTransaction(xToken, idPhotoFront, '.jpeg');
+        let transactionId = await regulaForensics.submitTransaction(xToken, idPhotoFront, '.jpeg');
         let status = RegulaForensics.TransactionStatus.Unknown;
 
         while (status != RegulaForensics.TransactionStatus.Completed) {
-            status = await reulaForensics.getTransactionStatus(transactionId, xToken);
+            status = await regulaForensics.getTransactionStatus(transactionId, xToken);
             if (status == RegulaForensics.TransactionStatus.Error) {
                 break;
             }
@@ -49,16 +49,43 @@ const IdScanFront = (props) => {
         if (status == RegulaForensics.TransactionStatus.Error) {
             //TODO: Error displayed
         } else {
-            let img = await reulaForensics.getImages(transactionId, xToken);
+            let img = await regulaForensics.getImages(transactionId, xToken);
             onBoardingUtilities.copyFromObject(onBoardingObject, props.location.state);
             onBoardingObject.idPhotoFront = img;
 
-            //continue with image processing
-            //TODO: if we need data, parse them
-            //let data = await reulaForensics.getTransactionResultJson(transactionId, RegulaForensics.eRPRM_ResultType.MRZ_OCR_Extended, xToken);
-            //console.log("data: " + data);
+            //continue with data processing
+            try {
+                //GET Portrait and Signature of IdCard Front
+                let dataGraphics = await regulaForensics.getTransactionResultJson(transactionId, RegulaForensics.eRPRM_ResultType.Graphics, xToken);
+                //Parse Graphics Data to get Images
+                for (let i = 0; i < dataGraphics[0].DocGraphicsInfo.pArrayFields.length; i++) {
+                    var graphic = dataGraphics[0].DocGraphicsInfo.pArrayFields[i];
+                    if (graphic.FieldName == "Portrait") {
+                        onBoardingObject.idPhotoFrontPortrait = graphic.image.image;
+                    }
+                    if (graphic.FieldName == "Signature") {
+                        onBoardingObject.idPhotoFrontSignature = graphic.image.image;
+                    }
+                }
 
+            }
+            catch (e) {
+                console.log("Error in parsing data of ID Front (Graphics)");
+                console.log(e);
+            }
 
+            try {
+                //GET Data from IdCard Front
+                let dataOCR = await regulaForensics.getTransactionResultJson(transactionId, RegulaForensics.eRPRM_ResultType.OCRLexicalAnalyze, xToken);
+                onBoardingObject.idPhotoFrontDataObject = regulaForensics.getParsedOCRLexicalAnalyzeData(dataOCR);
+
+                console.log("jiipiiiii");
+                console.log(onBoardingObject.idPhotoFrontDataObject);
+            }
+            catch (e) {
+                console.log("Error in parsing data of ID Front (OCRLexicalAnalyze)");
+                console.log(e);
+            }
             //TODO: Check or Repead step if id is not OK
         }
     }
@@ -67,6 +94,8 @@ const IdScanFront = (props) => {
         if (onBoardingObject.isFileUploaderUsed) {
             return <UploadButton id='uploadButton' parentCallback={callbackFunction} />;
         } else {
+            console.log("isFileUploaderUsed");
+            console.log(onBoardingObject.isFileUploaderUsed);
             return <VideoScreenshot id='videoScreenshot' parentCallback={callbackFunction} />;
         }
     }
