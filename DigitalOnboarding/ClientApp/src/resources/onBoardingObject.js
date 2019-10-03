@@ -12,11 +12,12 @@
 	'idPhotoFront': '',
     'idPhotoFrontPortrait': '',
     'idPhotoFrontSignature': '',
-    'idPhotoFrontDataObject': null,
+    'idPhotoFrontDataObjectOCR': null,
 
 	'idPhotoBack': '',
-    'idPhotoBackDataObject': null,
-
+    'idPhotoBackDataObjectOCR': null,
+    'idPhotoBackDataObjectMRZ': null,
+    
 	'livenessDetectionFirstPicture': '',
     'livenessDetectionSecondPicture': '',
 
@@ -44,10 +45,11 @@ const onBoardingUtilities = {
             copyTo.idPhotoFront = copyFrom.idPhotoFront;
             copyTo.idPhotoFrontPortrait = copyFrom.idPhotoFrontPortrait;
             copyTo.idPhotoFrontSignature = copyFrom.idPhotoFrontSignature;
-            copyTo.idPhotoFrontDataObject = copyFrom.idPhotoFrontDataObject;
+            copyTo.idPhotoFrontDataObjectOCR = copyFrom.idPhotoFrontDataObjectOCR;
 
 			copyTo.idPhotoBack = copyFrom.idPhotoBack;
-            copyTo.idPhotoBackDataObject = copyFrom.idPhotoBackDataObject;
+            copyTo.idPhotoBackDataObjectOCR = copyFrom.idPhotoBackDataObjectOCR;
+            copyTo.idPhotoBackDataObjectMRZ = copyFrom.idPhotoBackDataObjectMRZ;
 
 			copyTo.livenessDetectionFirstPicture = copyFrom.livenessDetectionFirstPicture;
             copyTo.livenessDetectionSecondPicture = copyFrom.livenessDetectionSecondPicture;

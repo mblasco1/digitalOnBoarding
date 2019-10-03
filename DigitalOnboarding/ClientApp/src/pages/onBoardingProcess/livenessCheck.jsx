@@ -13,7 +13,6 @@ import useInterval from "../../resources/useInterval";
 //import components
 import TitleSection from "./components/_titleSection";
 
-
 const styles = theme => ({
 	actionSection: {
 		marginTop: 50,

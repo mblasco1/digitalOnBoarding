@@ -8,7 +8,7 @@ import SnackbarContent from '@material-ui/core/SnackbarContent';
 import { amber, green } from '@material-ui/core/colors';
 
 //import resources
-import { ReactComponent as PictoIdent } from "../../images/Picto_Ident.svg";
+import { ReactComponent as LivenessIcon } from "../../images/livenessIcon.svg";
 import { onBoardingObject } from "../../resources/onBoardingObject";
 
 //import components
@@ -34,7 +34,12 @@ const styles = theme => ({
         flexWrap: 'wrap',
     },
     picture: {
-        margin: '5px 10px'
+        margin: '5px 10px',
+        borderRadius: '50%',
+        height: 200,
+        [theme.breakpoints.down(800)]: {
+            height: 150,
+        }
     },
 
     pictureStyle: {
@@ -107,19 +112,22 @@ const LivenessCheckOverview = (props) => {
     const hideFailedSnack = () => { setFailedOpen(false); }
 
     const Picture = ({ data, selectedClass }) => <img className={selectedClass} src={data} height="200" />
-    const PictureSrc = ({ data, selectedClass }) => <img src={"data:image/jpeg; base64," + data} className={selectedClass} height="200"/>
+    const PictureSrc = ({ data, selectedClass }) => <img src={"data:image/jpeg; base64," + data} className={selectedClass} height="200" />
 
     return (
         <React.Fragment>
-            <TitleSection title="Selfie & Liveness Check" Icon={PictoIdent} subtitle="" />
-
+            <TitleSection title="Selfie & Liveness Check" Icon={LivenessIcon} subtitle="Ihre Bilder werden geprüft..." />
             <div className={classes.actionSection}>
-                <div className={classes.pictureCollection}>
+                <div>
                     {props.location.state !== undefined ?
-                        <div className={classes.pictureStyle}>
-                            <Picture className={classes.picture} data={props.location.state.livenessDetectionFirstPicture} />
-                            <Picture className={classes.picture} data={props.location.state.livenessDetectionSecondPicture} />
-                            <PictureSrc className={classes.picture} data={props.location.state.idPhotoFrontPortrait} />
+                        <div>
+                            <div className={classes.pictureStyle}>
+                                <img className={classes.picture} src={props.location.state.livenessDetectionFirstPicture} />
+                                <img className={classes.picture} src={props.location.state.livenessDetectionSecondPicture} />
+                            </div>
+                            <div className={classes.pictureStyle}>
+                                <img src={"data:image/jpeg; base64," + props.location.state.idPhotoFrontPortrait} className={classes.picture} />
+                            </div>
                         </div>
                         :
                         <div>Ups, da ist was schiefgelaufen....Bitte Liveness Check nochmals durchführen</div>

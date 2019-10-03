@@ -77,10 +77,7 @@ const IdScanFront = (props) => {
             try {
                 //GET Data from IdCard Front
                 let dataOCR = await regulaForensics.getTransactionResultJson(transactionId, RegulaForensics.eRPRM_ResultType.OCRLexicalAnalyze, xToken);
-                onBoardingObject.idPhotoFrontDataObject = regulaForensics.getParsedOCRLexicalAnalyzeData(dataOCR);
-
-                console.log("jiipiiiii");
-                console.log(onBoardingObject.idPhotoFrontDataObject);
+                onBoardingObject.idPhotoFrontDataObjectOCR = regulaForensics.getParsedOCRLexicalAnalyzeData(dataOCR);
             }
             catch (e) {
                 console.log("Error in parsing data of ID Front (OCRLexicalAnalyze)");

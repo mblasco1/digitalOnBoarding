@@ -645,26 +645,33 @@ export class RegulaForensics extends Component {
 
     //return xToken
     async authenticate() {
+        try {
 
-        let response = await fetch(apiURL + '/Authentication/Authenticate', {
-            method: 'POST',
-            headers: {
-                'Content-Type': 'application/json'
-            },
-            body: JSON.stringify({
-                //TODO: Wo userId und Password speichern?
-                userId: 'TestUser',
-                Password: 'Regul@SdkTest'
-            })
-        });
-        let xToken = "";
-        for (var pair of response.headers.entries()) {
-            if (pair[0] == 'x-token') {
-                xToken = pair[1];
+
+            let response = await fetch(apiURL + '/Authentication/Authenticate', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify({
+                    //TODO: Wo userId und Password speichern?
+                    userId: 'TestUser',
+                    Password: 'Regul@SdkTest'
+                })
+            });
+            let xToken = "";
+            for (var pair of response.headers.entries()) {
+                if (pair[0] == 'x-token') {
+                    xToken = pair[1];
+                }
             }
+            return xToken;
+        } catch (e) {
+            console.log("Error in authenticate regula forensics");
+            console.log(e);
         }
 
-        return xToken;
+        return null;
     }
 
     //return transactionID
@@ -748,16 +755,16 @@ export class RegulaForensics extends Component {
         }
     }
 
-    getParsedOCRLexicalAnalyzeData(dataOCR) {
+    getParsedOCRLexicalAnalyzeData(data) {
         let dataList = new Array();
-        for (let i = 0; i < dataOCR[0].ListVerifiedFields.pFieldMaps.length; i++) {
+        for (let i = 0; i < data[0].ListVerifiedFields.pFieldMaps.length; i++) {
             let success = false;
             let type = "";
             let value = "";
 
             try {
-                type = dataOCR[0].ListVerifiedFields.pFieldMaps[i].FieldType;
-                value = dataOCR[0].ListVerifiedFields.pFieldMaps[i].Field_Visual;
+                type = data[0].ListVerifiedFields.pFieldMaps[i].FieldType;
+                value = data[0].ListVerifiedFields.pFieldMaps[i].Field_Visual;
                 success = true;
             } catch (e) {
                 console.log("Error in reading data of ID Front (OCRLexicalAnalyze)");
@@ -772,10 +779,36 @@ export class RegulaForensics extends Component {
                         break;
                     }
                 };
-                dataList.push({ type, value });
+                if (type && value ) { //Checks if x is not null/undefined / NaN / empty string / 0 / false
+                    dataList.push({ type, value });
+                }
             }
         }
+        return dataList;
+    }
 
+    getParsedMRZOCRExtendedData(data) {
+        let dataList = new Array();
+        for (let i = 0; i < data[0].DocVisualExtendedInfo.pArrayFields.length; i++) {
+            let success = false;
+            let type = "";
+            let value = "";
+
+            try {
+                type = data[0].DocVisualExtendedInfo.pArrayFields[i].FieldName;
+                value = data[0].DocVisualExtendedInfo.pArrayFields[i].Buf_Text;
+                success = true;
+            } catch (e) {
+                console.log("Error in reading data of ID Front (OCRLexicalAnalyze)");
+                console.log(e);
+            }
+
+            if (success) {
+                if (type && value) {//Checks if x is not null/undefined / NaN / empty string / 0 / false
+                    dataList.push({ type, value });
+                }
+            }
+        }
         return dataList;
     }
 

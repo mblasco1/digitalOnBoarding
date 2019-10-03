@@ -61,7 +61,7 @@ const IdScanBack = (props) => {
     };
     
     var tryValidateIdScanFront = async function (idPhotoFront) {
-
+        debugger;
         let regulaForensics = new RegulaForensics();
         let xToken = await regulaForensics.authenticate();
         //TODO: Check Authentication...
@@ -85,7 +85,10 @@ const IdScanBack = (props) => {
             try {
                 //GET Data from IdCard Front
                 let dataOCR = await regulaForensics.getTransactionResultJson(transactionId, RegulaForensics.eRPRM_ResultType.OCRLexicalAnalyze, xToken);
-                onBoardingObject.idPhotoBackDataObject = regulaForensics.getParsedOCRLexicalAnalyzeData(dataOCR);
+                onBoardingObject.idPhotoBackDataObjectOCR = regulaForensics.getParsedOCRLexicalAnalyzeData(dataOCR);
+
+                let dataMRZ = await regulaForensics.getTransactionResultJson(transactionId, RegulaForensics.eRPRM_ResultType.MRZ_OCR_Extended, xToken);
+                onBoardingObject.idPhotoBackDataObjectMRZ = regulaForensics.getParsedMRZOCRExtendedData(dataMRZ);
             }
             catch (e) {
                 console.log("Error in parsing data of ID Back (OCRLexicalAnalyze)");
