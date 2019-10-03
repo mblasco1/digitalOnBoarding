@@ -61,7 +61,6 @@ const IdScanBack = (props) => {
     };
     
     var tryValidateIdScanFront = async function (idPhotoFront) {
-        debugger;
         let regulaForensics = new RegulaForensics();
         let xToken = await regulaForensics.authenticate();
         //TODO: Check Authentication...

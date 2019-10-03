@@ -1,6 +1,9 @@
 ﻿import React, { useState, useEffect, useRef } from "react";
 import { withStyles } from '@material-ui/core/styles';
-import useInterval from "../../../resources/useInterval";
+import * as cocoSsd from '@tensorflow-models/coco-ssd';
+import * as tf from '@tensorflow/tfjs';
+import Snackbar from '@material-ui/core/Snackbar';
+import SnackbarContent from '@material-ui/core/SnackbarContent';
 
 const styles = theme => ({
     actionSection: {
@@ -34,42 +37,48 @@ const styles = theme => ({
         }
     },
 
-});
+    recognitionRectangle: {
+        top: '0',
+        left: '0',
+    },
 
+    info: {
+        backgroundColor: '#1E90FF',
+    },
+
+});
 
 function VideoScreenshot(props) {
     const { classes } = props;
+    const [infoOpen, setInfoOpen] = useState(false);
 
-    const canvasContainer = useRef(null);
     const videoContainer = useRef(null);
-    const [timer, setTimer] = useState(10);
-    const [isRunning, setIsRunning] = useState(false);
+    var videoIsStreaming = false;
+    var webCamPromise = null;
 
-    useInterval(() => {
-        var canvasContext = canvasContainer.current.getContext('2d');
-        canvasContext.clearRect(275, 180, 75, 75);
-        if (timer > 0) {
-            setTimer(timer - 1);
-            canvasContext.font = "60px Roboto";
-            canvasContext.fillStyle = "black";
-            canvasContext.textAlign = "center";
-            canvasContext.fillText(timer, 312, 250);
-        } else {
-            //make screenshot
+    const makeScreenshot = () => {
+            videoIsStreaming = false; //macht sonst mehrere da er schneller ist als das video schliessen
+            var canvasContext = document.getElementById("recognition").getContext('2d');
             canvasContext.drawImage(videoContainer.current, 0, 0, 640, 480);
-            canvasContainer.current.toBlob(redirectToConfirmationPage, 'image/jpeg');
-        }
-    }, isRunning ? 1000 : null);
+            document.getElementById("recognition").toBlob(redirectToConfirmationPage, 'image/jpeg');
+    }
 
     const redirectToConfirmationPage = (blob) => {
 
         blobToDataURL(blob).then(async (dataUrl) => {
-
-            setIsRunning(false);
+            videoIsStreaming = false;
             videoContainer.current.stop();
-
             //callback with dataUrl
             props.parentCallback(dataUrl);
+        });
+    }
+
+    const blobToDataURL = (blob) => {
+        return new Promise((fulfill, reject) => {
+            let reader = new FileReader();
+            reader.onerror = reject;
+            reader.onload = (e) => fulfill(reader.result);
+            reader.readAsDataURL(blob);
         });
     }
 
@@ -85,7 +94,6 @@ function VideoScreenshot(props) {
             }, 250);
         });
 
-
         // Get access to the camera
         if (navigator.mediaDevices && navigator.mediaDevices.getUserMedia) {
             // Not adding `{ audio: true }` since we only want video now
@@ -96,11 +104,10 @@ function VideoScreenshot(props) {
             * try out: https://simpl.info/getusermedia/sources/
             * code :   https://github.com/samdutton/simpl/blob/gh-pages/getusermedia/sources/js/main.js#L39
             * */
-            navigator.mediaDevices.enumerateDevices().then((data) => {
+            webCamPromise = navigator.mediaDevices.enumerateDevices().then((data) => {
                 for (const deviceInfo of data) {
                     if (deviceInfo.kind === 'videoinput') {
                         videoOptions.push(deviceInfo.deviceId);
-
                         //display all videoinput devices
                         /*
                         var node = document.createElement("LI");
@@ -123,57 +130,125 @@ function VideoScreenshot(props) {
                     videoContainer.current.srcObject = stream;
                     videoContainer.current.selectedStream = stream;
 
-
                     videoContainer.current.oncanplay = function playStream() {
                         videoContainer.current.play();
-                        setIsRunning(true);
-
-                        canvasContainer.current.width = 640;
-                        canvasContainer.current.height = 480;
-
-                        window.addEventListener('resize', resizeCanvas, false);
-                        resizeCanvas();
+                        videoIsStreaming = true;
                     };
 
                     videoContainer.current.stop = function unmountStream() {
                         videoContainer.current.selectedStream.getTracks()[0].stop();
                     };
-                })
 
+                    return new Promise((resolve, reject) => {
+                        videoContainer.current.onloadedmetadata = () => {
+                            resolve();
+                        };
+                    });
+                })
+            })
+
+            videoContainer.current.addEventListener('loadeddata', (event) => {
+                console.log("loadeddata");
+                var modelPromise = cocoSsd.load();
+                Promise.all([modelPromise, webCamPromise])
+                    .then(values => {
+                        detectFrame(document.getElementById("video"), values[0]);
+                    })
+                    .catch(error => {
+                        console.error(error);
+                    });
             });
+
         }
     }, []);
 
-    function resizeCanvas() {
-        if (canvasContainer.current != null) {
-            var canvasContext = canvasContainer.current.getContext('2d');
-            canvasContext.setLineDash([8]);
-            canvasContext.lineWidth = 4;
+    //============================================================================================================================================
+    // tensorflow object detection
+    // https://codesandbox.io/s/tensorflowjs-real-time-object-detection-bysze
 
-            if (window.innerWidth < 800) {
-                canvasContext.strokeRect(160, 100, 325, 265);
-            } else {
-                canvasContext.strokeRect(100, 100, 430, 265);
-            }
+    const detectFrame = (video, model) => {
+        if (videoIsStreaming) {
+            model.detect(video).then(predictions => {
+                renderPredictions(predictions);
+                requestAnimationFrame(() => {
+                    detectFrame(video, model);
+                });
+            });
         }
-    }
+    };
 
-    const blobToDataURL = (blob) => {
-        return new Promise((fulfill, reject) => {
-            let reader = new FileReader();
-            reader.onerror = reject;
-            reader.onload = (e) => fulfill(reader.result);
-            reader.readAsDataURL(blob);
+    const renderPredictions = predictions => {
+        const ctx = document.getElementById("recognition").getContext("2d");
+        ctx.clearRect(0, 0, ctx.canvas.width, ctx.canvas.height);
+        // Font options.
+        const font = "16px sans-serif";
+        ctx.font = font;
+        ctx.textBaseline = "top";
+        predictions.forEach(prediction => {
+            if (prediction.class == "book") {
+                let x = prediction.bbox[0];
+                let y = prediction.bbox[1];
+                let width = prediction.bbox[2];
+                let height = prediction.bbox[3];
+                //da videoframe gespielt ist...
+                x = videoContainer.current.width - (x + width);
+
+                // Draw the bounding box.
+                ctx.strokeStyle = "#ff0000";
+                ctx.lineWidth = 4;
+                ctx.strokeRect(x, y, width, height);
+                // Draw the label background.
+                ctx.fillStyle = "#ff0000";
+                let textWidth = ctx.measureText(prediction.class).width;
+                let textHeight = parseInt(font, 10); // base 10
+
+                //Nur für Textanzeige (Hintergrund)
+                //ctx.fillRect(x, y, textWidth + 26, textHeight + 4);
+
+                //Make Screenshot
+                var vid = document.getElementById("video");
+                const factorWidth = 0.75;
+                const factorHeight = 0.60;
+                if (width > (vid.videoWidth * factorWidth) && height > (vid.videoHeight * factorHeight) && prediction.score > 0.75) {
+                    console.log(prediction.score);
+                    console.log("-------> Snpashot!");
+                    makeScreenshot();
+                } else {
+                    showInfoSnack();
+                }
+            }
         });
-    }
+        /* Nur für Textanzeige
+        predictions.forEach(prediction => {
+            if (prediction.class == "book") {
+                let x = prediction.bbox[0];
+                let y = prediction.bbox[1];
+                let width = prediction.bbox[2];
+                //da videoframe gespielt ist...
+                x = videoContainer.current.width - (x + width);
+
+                // Draw the text last to ensure it's on top.
+                ctx.fillStyle = "#000000";
+                ctx.fillText("ID Card", x, y);
+            }
+        });
+        */
+    };
+
+    //============================================================================================================================================
+    const showInfoSnack = () => { setInfoOpen(true); }
+    const hideInfoSnack = () => { setInfoOpen(false); }
 
     return (
         <div className={classes.actionSection}>
             <video ref={videoContainer} className={[classes.videoElement]} id="video" autoPlay></video>
-            <canvas ref={canvasContainer} className={classes.canvasElement} />
+            <canvas className={classes.canvasElement} id="recognition" width="600" height="500" />
+
+            <Snackbar anchorOrigin={{ vertical: 'top', horizontal: 'center' }} open={infoOpen} autoHideDuration={2000} onClose={hideInfoSnack}>
+                <SnackbarContent className={classes.info} onClose={hideInfoSnack} message="Bitte die ID so nah wie möglich zu der Kamera halten." />
+            </Snackbar>
         </div>
     );
 }
-
 
 export default withStyles(styles)(VideoScreenshot);
