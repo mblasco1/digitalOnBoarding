@@ -215,7 +215,6 @@ const styles = theme => ({
 const Thanks = (props) => {
     const { classes } = props;
     const canvasContainer = useRef(null);
-
     useEffect(() => {
         props.setStep(4);
     }, []);
@@ -305,18 +304,38 @@ const Thanks = (props) => {
                                     <tbody>
                                         <tr>
                                             <td> Portrait </td>
-                                            <td> <Picture data={props.location.state.idPhotoFrontPortrait} selectedClass={classes.imgStyleNormal} alt="Picture ID" /></td>
+                                            <td>
+                                                {props.location.state.idPhotoFrontPortrait !== "" ?
+                                                    <Picture data={props.location.state.idPhotoFrontPortrait} selectedClass={classes.imgStyleNormal} alt="Picture ID" />
+                                                    :
+                                                    <div>No picture available </div>
+                                                }
+                                            </td>
                                         </tr>
                                         <tr>
                                             <td> Signature </td>
-                                            <td> <Picture data={props.location.state.idPhotoFrontSignature} selectedClass={classes.imgStyleNormal} alt="Picture Signature" /></td>
+                                            <td>
+                                                {props.location.state.idPhotoFrontSignature !== "" ?
+                                                    <Picture data={props.location.state.idPhotoFrontSignature} selectedClass={classes.imgStyleNormal} alt="Picture Signature" />
+                                                    :
+                                                    <div>No picture available </div>
+                                                }
+                                            </td>
                                         </tr>
-                                        {props.location.state.idPhotoFrontDataObjectOCR.map(data => (
-                                            <tr>
-                                                <td key={data.type}>{data.type}</td>
-                                                <td key={data.value}>{data.value}</td>
+
+                                        {props.location.state.idPhotoFrontDataObjectOCR !== null ?
+                                                props.location.state.idPhotoFrontDataObjectOCR.map(data => (
+                                                    <tr className={classes.tdStyle}>
+                                                        <td key={data.type}>{data.type}</td>
+                                                        <td key={data.value}><div>{data.value}</div></td>
+                                                    </tr>
+                                                ))
+                                            :
+                                            <tr className={classes.tdStyle}>
+                                                <td key="NoDataFound">No data found</td>
+                                                <td key="Empty value"><div></div></td>
                                             </tr>
-                                        ))}
+                                        }
                                     </tbody>
                                 </table>
                             </div>
@@ -331,12 +350,21 @@ const Thanks = (props) => {
                                         </tr>
                                     </thead>
                                     <tbody>
-                                        {props.location.state.idPhotoBackDataObjectOCR.map(data => (
+                                        {props.location.state.idPhotoBackDataObjectOCR !== null ?
+
+                                            props.location.state.idPhotoBackDataObjectOCR.map(data => (
+                                                <tr className={classes.tdStyle}>
+                                                    <td key={data.type}>{data.type}</td>
+                                                    <td key={data.value}><div>{data.value}</div></td>
+                                                </tr>
+                                            ))
+                                            :
                                             <tr className={classes.tdStyle}>
-                                                <td key={data.type}>{data.type}</td>
-                                                <td key={data.value}><div>{data.value}</div></td>
+                                                <td key="NoDataFound">No data found</td>
+                                                <td key="Empty value"><div></div></td>
                                             </tr>
-                                        ))}
+                                        }
+
                                     </tbody>
                                 </table>
                                 <p>MRZ OCR Extended:</p>
@@ -348,12 +376,20 @@ const Thanks = (props) => {
                                         </tr>
                                     </thead>
                                     <tbody>
-                                        {props.location.state.idPhotoBackDataObjectMRZ.map(data => (
+                                        {props.location.state.idPhotoBackDataObjectMRZ !== null ?
+
+                                            props.location.state.idPhotoBackDataObjectMRZ.map(data => (
+                                                <tr className={classes.tdStyle}>
+                                                    <td key={data.type}>{data.type}</td>
+                                                    <td key={data.value}><div>{data.value}</div></td>
+                                                </tr>
+                                            ))
+                                            :
                                             <tr className={classes.tdStyle}>
-                                                <td key={data.type}>{data.type}</td>
-                                                <td key={data.value}><div>{data.value}</div></td>
+                                                <td key="NoDataFound">No data found</td>
+                                                <td key="Empty value"><div></div></td>
                                             </tr>
-                                        ))}
+                                        }
                                     </tbody>
                                 </table>
                             </div>

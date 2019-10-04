@@ -54,8 +54,6 @@ const styles = theme => ({
 const SignContract = (props) => {
     const { classes } = props;
 
-    console.log(props);
-
     useEffect(() => {
         props.setStep(4);
     }, []);

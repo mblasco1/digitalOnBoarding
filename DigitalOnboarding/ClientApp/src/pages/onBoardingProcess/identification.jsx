@@ -225,7 +225,13 @@ const PhoneNumber = (props) => {
             onBoardingObject.email = identificationValidation.email.value;
             onBoardingObject.nationality = nationality;
 
-            props.history.push("/onBoarding/idscanfrontoverview", onBoardingObject);
+            if (window.screen.width <= 800) {
+                //wenn smartphone is used, direct fileupload
+                onBoardingObject.isFileUploaderUsed = true;
+                props.history.push('/onboarding/idscanfront', onBoardingObject);
+            } else {
+                props.history.push("/onBoarding/idscanfrontoverview", onBoardingObject);
+            }
         }
     }
 

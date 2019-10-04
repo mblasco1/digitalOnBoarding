@@ -34,7 +34,7 @@ const styles = (theme) => ({
     },
 });
 
-const IdScanBack = (props) => {
+const IdScanBackOverview = (props) => {
     const { classes, setStep } = props;
 
     useEffect(() => {
@@ -48,11 +48,15 @@ const IdScanBack = (props) => {
     const useVideoScreenShotFunction = () => {
         chooseOpperation(false);
     }
-
+    
     function chooseOpperation(isFileUploaderUsed) {
         onBoardingUtilities.copyFromObject(onBoardingObject, props.location.state);
         onBoardingObject.isFileUploaderUsed = isFileUploaderUsed;
         props.history.push('/onboarding/idscanback', onBoardingObject);
+    }
+
+var    componentDidMount = () => {
+        if (window.screen.width >= 800) { chooseOpperation(true); }
     }
 
     return (
@@ -65,4 +69,4 @@ const IdScanBack = (props) => {
         </React.Fragment>
     );
 }
-export default withStyles(styles)(IdScanBack);
+export default withStyles(styles)(IdScanBackOverview);

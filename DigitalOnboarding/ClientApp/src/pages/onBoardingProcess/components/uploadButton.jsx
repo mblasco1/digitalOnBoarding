@@ -6,7 +6,40 @@ const styles = theme => ({
     uploadScetion: {
         display: 'flex',
         justifyContent: 'center',
+
+
+
     },
+
+    uploadBtnWrapper: {
+        position: 'relative',
+        overflow: 'hidden',
+        display: 'inline - block',
+
+        '& input': {
+            fontSize: 100,
+            position: 'absolute',
+            left: 0,
+            top: 0,
+            opacity: 0,
+        }
+    },
+
+    button: {
+        border: 'none',
+        color: 'white',
+        padding: '15px 32px',
+        textAlign: 'center',
+        textDecoration: 'none',
+        display: 'inline - block',
+        fontSize: '16px',
+        width: 250,
+        marginTop: 20,
+
+        backgroundImage: 'linear-gradient(180deg, #004D9F 0%, #0EC8C8 100%)',
+        boxShadow: '0 0 16px 0 rgba(255, 255, 255, 0.2)'
+    },
+
 });
 
 function UploadButton(props) {
@@ -32,7 +65,10 @@ function UploadButton(props) {
 
     return (
         <div className={classes.uploadScetion}>
-            <input accept="image/*" className={classes.button} id="upload-button-file" multiple type="file" onChange={fileChangedHandler} />
+            <div className={classes.uploadBtnWrapper} >
+                <button className={classes.button} >{window.screen.width <= 800 ? 'Take a Foto' : 'Upload a file'}</button>
+                <input accept="image/*" className={classes.button} multiple type="file" onChange={fileChangedHandler} />
+            </div>
         </div>
     );
 }

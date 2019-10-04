@@ -1,7 +1,6 @@
 ﻿import React, { useState, useEffect, useRef } from "react";
 import { withStyles } from '@material-ui/core/styles';
 import * as cocoSsd from '@tensorflow-models/coco-ssd';
-import * as tf from '@tensorflow/tfjs';
 import Snackbar from '@material-ui/core/Snackbar';
 import SnackbarContent from '@material-ui/core/SnackbarContent';
 
@@ -148,7 +147,8 @@ function VideoScreenshot(props) {
             })
 
             videoContainer.current.addEventListener('loadeddata', (event) => {
-                var modelPromise = cocoSsd.load();
+                var modelPromise = cocoSsd.load(); //cocoSsd.load({base: "mobilenet_v2"}) // default: lite_mobilenet_v2, other models: mobilenet_v1 | mobilenet_v2
+                console.log(modelPromise);
                 Promise.all([modelPromise, webCamPromise])
                     .then(values => {
                         detectFrame(document.getElementById("video"), values[0]);
@@ -163,38 +163,41 @@ function VideoScreenshot(props) {
 
     //============================================================================================================================================
     // tensorflow object detection
-    // https://codesandbox.io/s/tensorflowjs-real-time-object-detection-bysze
+    // https://github.com/tensorflow/tfjs-models/tree/master/coco-ssd
+    // Example: https://codesandbox.io/s/tensorflowjs-real-time-object-detection-bysze
 
     const detectFrame = (video, model) => {
+        console.log("detectFrame all");
         if (videoIsStreaming) {
             model.detect(video).then(predictions => {
                 renderPredictions(predictions);
                 requestAnimationFrame(() => {
                     detectFrame(video, model);
+                }, (error) => {
+                        console.log("Couldn't start the webcam");
+                        console.error(error);
                 });
             });
         }
     };
 
     const renderPredictions = predictions => {
-        /*
+        
         const ctx = document.getElementById("recognition").getContext("2d");
         ctx.clearRect(0, 0, ctx.canvas.width, ctx.canvas.height);
         // Font options.
         const font = "16px sans-serif";
         ctx.font = font;
         ctx.textBaseline = "top";
-        */
+        
         predictions.forEach(prediction => {
+            //https://github.com/tensorflow/tfjs-models/blob/master/coco-ssd/src/classes.ts
             if (prediction.class == "book") {
-
-                
                 let x = prediction.bbox[0];
                 let y = prediction.bbox[1];
                 let width = prediction.bbox[2];
                 let height = prediction.bbox[3];
 
-                /*
                 //da videoframe gespielt ist...
                 x = videoContainer.current.width - (x + width);
 
@@ -204,12 +207,14 @@ function VideoScreenshot(props) {
                 ctx.strokeRect(x, y, width, height);
                 // Draw the label background.
                 ctx.fillStyle = "#ff0000";
+
+                /*
+                //Nur für Textanzeige (Hintergrund)
                 let textWidth = ctx.measureText(prediction.class).width;
                 let textHeight = parseInt(font, 10); // base 10
-
-                //Nur für Textanzeige (Hintergrund)
-                //ctx.fillRect(x, y, textWidth + 26, textHeight + 4);
+                ctx.fillRect(x, y, textWidth + 26, textHeight + 4);
                 */
+
                 //Make Screenshot
                 var vid = document.getElementById("video");
                 const factorWidth = 0.6;

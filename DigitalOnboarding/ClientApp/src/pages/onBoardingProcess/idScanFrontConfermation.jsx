@@ -56,9 +56,13 @@ const IdScanFrontConfermation = (props) => {
 
     const nextStep = () => {
         if (onBoardingObject.idPhotoFrontPortrait !== null) {
-            //not needed anymore, remove unnecessary load
-            //onBoardingObject.idPhotoFront = null;
-            props.history.push('/onboarding/idscanbackoverview', onBoardingObject);
+            if (window.screen.width <= 800) {
+                //wenn smartphone is used, direct fileupload
+                onBoardingObject.isFileUploaderUsed = true;
+                props.history.push('/onboarding/idscanback', onBoardingObject);
+            } else {
+                props.history.push('/onboarding/idscanbackoverview', onBoardingObject);
+            }
         }
     }
 

@@ -1,6 +1,8 @@
 ﻿//import libs
-import React, { useEffect } from "react";
+import React, { useEffect, useState } from "react";
 import { withStyles } from "@material-ui/core";
+import Snackbar from '@material-ui/core/Snackbar';
+import SnackbarContent from '@material-ui/core/SnackbarContent';
 
 //import resources
 import { ReactComponent as ScanIcon } from "../../images/idScanIcon.svg";
@@ -14,57 +16,45 @@ import VideoScreenshot from "./components/videoScreenshot";
 import UploadButton from "./components/uploadButton";
 
 const styles = theme => ({
-	actionSection: {
-		marginTop: 50,
-		height: 480,
-        width: 640,
-        [theme.breakpoints.down(800)]: {
-            height: 280,
-            width: 340,
-        }
-	},
-	microblinkContainer: {
-		'--mb-widget-font-family': 'Roboto',
-		'--mb-hem': '16px',
-		'--mb-btn-font-color': 'white',
-		'--mb-btn-background-color': '#002650',
-		'--mb-btn-background-color-hover': '#8EC8C7',
-		'--mb-btn-flip-image-color': 'white',
-		'--mb-btn-cancel-color': 'white',
-		'--mb-dropzone-hover-color': 'rgba(72, 178, 232, .25)',
-		'--mb-loader-font-color': 'black',
-		'--mb-loader-background-color': 'rgb(250,250,250)',
-		'--mb-counter-background-color': 'rgb(0,0,0,0.7)',
-		'--mb-counter-font-color': 'white',
-		'--mb-json-color-key': 'black',
-		'--mb-json-color-string': '#48b2e8',
-		'--mb-json-color-boolean': '#26a4e4',
-		'--mb-json-color-number': 'black',
-		'--mb-json-color-null': '#26a4e4',
-		'--mb-dialog-font-color': 'white',
-		'--mb-dialog-background-color': 'black'
-	}
+    error: {
+        backgroundColor: theme.palette.error.dark,
+    },
 });
 
 const IdScanBack = (props) => {
 	const { classes, setStep } = props;
+    const [failedOpen, setFailedOpen] = useState(false);
 
 	useEffect(() => {
 		setStep(2);
 	}, []);
 
     var callbackFunction = async function chooseImageFile(imgValue) {
-        await tryValidateIdScanFront(imgValue);
-        props.history.push('/onboarding/idscanbackconfermation', onBoardingObject);
+        var validateSuccessful = await tryValidateIdScanFront(imgValue);
+        if (validateSuccessful) {
+            props.history.push('/onboarding/idscanbackconfermation', onBoardingObject);
+        } else {
+            //try again
+            showFailedSnack();
+            props.history.push('/onboarding/idscanback', onBoardingObject);
+        }
     };
     
     var tryValidateIdScanFront = async function (idPhotoFront) {
         let regulaForensics = new RegulaForensics();
         let xToken = await regulaForensics.authenticate();
-        //TODO: Check Authentication...
+        if (xToken == null) {
+            console.error("xToken is empty or null");
+            return false;
+        }
+        
         let transactionId = await regulaForensics.submitTransaction(xToken, idPhotoFront, '.jpeg');
-        let status = RegulaForensics.TransactionStatus.Unknown;
+        if (transactionId == "") {
+            console.error("TransactionID is empty or null");
+            return false;
+        }
 
+        let status = RegulaForensics.TransactionStatus.Unknown;
         while (status != RegulaForensics.TransactionStatus.Completed) {
             status = await regulaForensics.getTransactionStatus(transactionId, xToken);
             if (status == RegulaForensics.TransactionStatus.Error) {
@@ -73,7 +63,8 @@ const IdScanBack = (props) => {
         }
 
         if (status == RegulaForensics.TransactionStatus.Error) {
-            //TODO: Error displayed
+            console.error("state of transaction ends in a error");
+            return false;
         } else {
             let img = await regulaForensics.getImages(transactionId, xToken);
             onBoardingUtilities.copyFromObject(onBoardingObject, props.location.state);
@@ -82,33 +73,51 @@ const IdScanBack = (props) => {
             try {
                 //GET Data from IdCard Front
                 let dataOCR = await regulaForensics.getTransactionResultJson(transactionId, RegulaForensics.eRPRM_ResultType.OCRLexicalAnalyze, xToken);
-                onBoardingObject.idPhotoBackDataObjectOCR = regulaForensics.getParsedOCRLexicalAnalyzeData(dataOCR);
+                let parsedDataOCR = regulaForensics.getParsedOCRLexicalAnalyzeData(dataOCR)
+                debugger;
+                onBoardingObject.idPhotoBackDataObjectOCR = parsedDataOCR;
+
+                if (parsedDataOCR == null) {
+                    console.error("Cant read any data OCR on IdCard Back");
+                    debugger;
+                }
 
                 let dataMRZ = await regulaForensics.getTransactionResultJson(transactionId, RegulaForensics.eRPRM_ResultType.MRZ_OCR_Extended, xToken);
-                onBoardingObject.idPhotoBackDataObjectMRZ = regulaForensics.getParsedMRZOCRExtendedData(dataMRZ);
+                let parsedDataMRZ = regulaForensics.getParsedMRZOCRExtendedData(dataMRZ);
+                onBoardingObject.idPhotoBackDataObjectMRZ = parsedDataMRZ;
+
+                if (parsedDataMRZ == null) {
+                    console.error("Cant read any data MRZ on IdCard Back");
+                    return false;
+                }
             }
             catch (e) {
+                debugger;
                 console.log("Error in parsing data of ID Back (OCRLexicalAnalyze)");
                 console.log(e);
+                return false;
             }
-            //TODO: Check or Repead step if id is not OK
         }
+        return true;
     }
 
     const body = function GetBodyElement() {
-        if (onBoardingObject.isFileUploaderUsed) {
-            return <UploadButton id='uploadButton' parentCallback={callbackFunction} />;
-        } else {
-            console.log("isFileUploaderUsed");
-            console.log(onBoardingObject.isFileUploaderUsed);
+        if (!onBoardingObject.isFileUploaderUsed) {
             return <VideoScreenshot id='videoScreenshot' parentCallback={callbackFunction} />;
+        } else {
+            return <UploadButton id='uploadButton' parentCallback={callbackFunction} />;
         }
     }
+    const showFailedSnack = () => { setFailedOpen(true); }
+    const hideFailedSnack = () => { setFailedOpen(false); }
 
 	return (
 		<React.Fragment>
 			<TitleSection title="ID Rückseite" Icon={ScanIcon} subtitle="Bitte die Rückseite Ihrer ID scannen" />
             {body()}
+            <Snackbar anchorOrigin={{ vertical: 'top', horizontal: 'center' }} open={failedOpen} autoHideDuration={3000} onClose={hideFailedSnack}>
+                <SnackbarContent className={classes.error} onClose={hideFailedSnack} message={'ID Karte wurde nicht erkannt, versuchen Sie es erneut!'} />
+            </Snackbar>
 		</React.Fragment>
 	);
 }

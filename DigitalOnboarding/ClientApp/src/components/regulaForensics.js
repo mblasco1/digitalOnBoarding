@@ -659,7 +659,7 @@ export class RegulaForensics extends Component {
                     Password: 'Regul@SdkTest'
                 })
             });
-            let xToken = "";
+            let xToken = null;
             for (var pair of response.headers.entries()) {
                 if (pair[0] == 'x-token') {
                     xToken = pair[1];
@@ -727,9 +727,7 @@ export class RegulaForensics extends Component {
                 'X-Token': xToken
             },
         });
-
         let result = await response.json();
-
         return result;
     }
 
@@ -757,65 +755,62 @@ export class RegulaForensics extends Component {
 
     getParsedOCRLexicalAnalyzeData(data) {
         let dataList = new Array();
-        for (let i = 0; i < data[0].ListVerifiedFields.pFieldMaps.length; i++) {
-            let success = false;
-            let type = "";
-            let value = "";
-
+        if (data != null) {
             try {
-                type = data[0].ListVerifiedFields.pFieldMaps[i].FieldType;
-                value = data[0].ListVerifiedFields.pFieldMaps[i].Field_Visual;
-                success = true;
+                for (let i = 0; i < data[0].ListVerifiedFields.pFieldMaps.length; i++) {
+                    let type = "";
+                    let value = "";
+
+                    type = data[0].ListVerifiedFields.pFieldMaps[i].FieldType;
+                    value = data[0].ListVerifiedFields.pFieldMaps[i].Field_Visual;
+                    //Add data
+                    for (var k in RegulaForensics.eVisualFieldType) {
+                        if (k == type) {
+                            type = RegulaForensics.eVisualFieldType[k];
+                            break;
+                        }
+                    };
+                    if (type && value) { //Checks if x is not null/undefined / NaN / empty string / 0 / false
+                        dataList.push({ type, value });
+                    }
+                }
             } catch (e) {
-                console.log("Error in reading data of ID Front (OCRLexicalAnalyze)");
+                console.log("Error in parsing data of ID (OCRLexicalAnalyze)");
                 console.log(e);
             }
-
-            if (success) {
-                //Add data
-                for (var k in RegulaForensics.eVisualFieldType) {
-                    if (k == type) {
-                        type = RegulaForensics.eVisualFieldType[k];
-                        break;
-                    }
-                };
-                if (type && value ) { //Checks if x is not null/undefined / NaN / empty string / 0 / false
-                    dataList.push({ type, value });
-                }
-            }
         }
-        return dataList;
+        if (dataList.length == 0) {
+            return null;
+        } else {
+            return dataList
+        }
     }
 
     getParsedMRZOCRExtendedData(data) {
         let dataList = new Array();
-        for (let i = 0; i < data[0].DocVisualExtendedInfo.pArrayFields.length; i++) {
-            let success = false;
-            let type = "";
-            let value = "";
-
+        if (data != null) {
             try {
-                type = data[0].DocVisualExtendedInfo.pArrayFields[i].FieldName;
-                value = data[0].DocVisualExtendedInfo.pArrayFields[i].Buf_Text;
-                success = true;
+                for (let i = 0; i < data[0].DocVisualExtendedInfo.pArrayFields.length; i++) {
+                    let type = "";
+                    let value = "";
+                    type = data[0].DocVisualExtendedInfo.pArrayFields[i].FieldName;
+                    value = data[0].DocVisualExtendedInfo.pArrayFields[i].Buf_Text;
+
+                    if (type && value) {//Checks if x is not null/undefined / NaN / empty string / 0 / false
+                        dataList.push({ type, value });
+                    }
+                }
             } catch (e) {
-                console.log("Error in reading data of ID Front (OCRLexicalAnalyze)");
+                console.log("Error in parsing data of ID (OCRLexicalAnalyze)");
                 console.log(e);
             }
-
-            if (success) {
-                if (type && value) {//Checks if x is not null/undefined / NaN / empty string / 0 / false
-                    dataList.push({ type, value });
-                }
-            }
         }
-        return dataList;
+        if (dataList.length == 0) {
+            return null;
+        } else {
+            return dataList
+        }
     }
-
-
-
-
-
 }
 
 

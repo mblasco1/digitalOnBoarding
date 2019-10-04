@@ -1,6 +1,8 @@
 ﻿//import libs
-import React, { useEffect } from "react";
+import React, { useEffect, useState } from "react";
 import { withStyles } from "@material-ui/core";
+import Snackbar from '@material-ui/core/Snackbar';
+import SnackbarContent from '@material-ui/core/SnackbarContent';
 
 //import resources
 import { ReactComponent as ScanIcon } from "../../images/idScanIcon.svg";
@@ -14,29 +16,46 @@ import VideoScreenshot from "./components/videoScreenshot";
 import UploadButton from "./components/uploadButton";
 
 const styles = (theme) => ({
-
+    error: {
+        backgroundColor: theme.palette.error.dark,
+    },
 });
 
 const IdScanFront = (props) => {
     const { classes, setStep } = props;
+    const [failedOpen, setFailedOpen] = useState(false);
 
     useEffect(() => {
         setStep(2);
     }, []);
 
     var callbackFunction = async function chooseImageFile(imgValue) {
-        await tryValidateIdScanFront(imgValue);
-        props.history.push('/onboarding/idscanfrontconfermation', onBoardingObject);
+        var validateSuccessful = await tryValidateIdScanFront(imgValue);
+        if (validateSuccessful) {
+            props.history.push('/onboarding/idscanfrontconfermation', onBoardingObject);
+        } else {
+            //try again
+            showFailedSnack();
+            props.history.push('/onboarding/idscanfront', onBoardingObject);
+        }
     };
 
     var tryValidateIdScanFront = async function (idPhotoFront) {
-
         let regulaForensics = new RegulaForensics();
         let xToken = await regulaForensics.authenticate();
+        if (xToken == null) {
+            console.error("xToken is empty or null");
+            return false;
+        }
+
         //TODO: Check Authentication...
         let transactionId = await regulaForensics.submitTransaction(xToken, idPhotoFront, '.jpeg');
-        let status = RegulaForensics.TransactionStatus.Unknown;
+        if (transactionId == "") {
+            console.error("TransactionID is empty or null");
+            return false;
+        }
 
+        let status = RegulaForensics.TransactionStatus.Unknown;
         while (status != RegulaForensics.TransactionStatus.Completed) {
             status = await regulaForensics.getTransactionStatus(transactionId, xToken);
             if (status == RegulaForensics.TransactionStatus.Error) {
@@ -46,6 +65,8 @@ const IdScanFront = (props) => {
 
         if (status == RegulaForensics.TransactionStatus.Error) {
             //TODO: Error displayed
+            console.error("state of transaction ends in a error");
+            return false;
         } else {
             let img = await regulaForensics.getImages(transactionId, xToken);
             onBoardingUtilities.copyFromObject(onBoardingObject, props.location.state);
@@ -66,37 +87,54 @@ const IdScanFront = (props) => {
                     }
                 }
 
+                if (onBoardingObject.idPhotoFrontPortrait == '') {
+                    console.error("No Portrait or Signature found");
+                    return false;
+                }
             }
             catch (e) {
-                console.log("Error in parsing data of ID Front (Graphics)");
-                console.log(e);
+                console.error("Error in parsing data of ID Front (Graphics)");
+                console.error(e);
+                return false;
             }
 
             try {
                 //GET Data from IdCard Front
                 let dataOCR = await regulaForensics.getTransactionResultJson(transactionId, RegulaForensics.eRPRM_ResultType.OCRLexicalAnalyze, xToken);
-                onBoardingObject.idPhotoFrontDataObjectOCR = regulaForensics.getParsedOCRLexicalAnalyzeData(dataOCR);
+                let parsedData = regulaForensics.getParsedOCRLexicalAnalyzeData(dataOCR);
+                if (parsedData == null) {
+                    console.error("Cant read any data on IdCard Front");
+                    return false;
+                }
+                onBoardingObject.idPhotoFrontDataObjectOCR = parsedData;
             }
             catch (e) {
-                console.log("Error in parsing data of ID Front (OCRLexicalAnalyze)");
-                console.log(e);
+                console.error("Error in parsing data of ID Front (OCRLexicalAnalyze)");
+                console.error(e);
+                return false;
             }
-            //TODO: Check or Repead step if id is not OK
         }
+        return true;
     }
 
     const body = function GetBodyElement() {
-        if (onBoardingObject.isFileUploaderUsed) {
-            return <UploadButton id='uploadButton' parentCallback={callbackFunction} />;
-        } else {
+        if (!onBoardingObject.isFileUploaderUsed) {
             return <VideoScreenshot id='videoScreenshot' parentCallback={callbackFunction} />;
+        } else {
+            return <UploadButton id='uploadButton' parentCallback={callbackFunction} />;
         }
     }
+
+    const showFailedSnack = () => { setFailedOpen(true); }
+    const hideFailedSnack = () => { setFailedOpen(false); }
 
     return (
         <React.Fragment>
             <TitleSection title="ID Vorderseite" Icon={ScanIcon} subtitle="Bitte die Vorderseite Ihrer ID scannen" />
             {body()}
+            <Snackbar anchorOrigin={{ vertical: 'top', horizontal: 'center' }} open={failedOpen} autoHideDuration={3000} onClose={hideFailedSnack}>
+                <SnackbarContent className={classes.error} onClose={hideFailedSnack} message={'ID Karte wurde nicht erkannt, versuchen Sie es erneut!'} />
+            </Snackbar>
         </React.Fragment>
     );
 }
