@@ -205,7 +205,7 @@ const styles = theme => ({
         '& td': {
             border: 'solid 1px',
             minWidth: '200px',
-            wordWrap: 'anywhere',
+            wordBreak: 'break-all',
         }
 
     },

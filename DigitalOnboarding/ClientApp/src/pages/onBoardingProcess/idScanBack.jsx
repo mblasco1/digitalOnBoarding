@@ -54,8 +54,6 @@ const IdScanBack = (props) => {
 	}, []);
 
     var callbackFunction = async function chooseImageFile(imgValue) {
-        console.log("Daten callbackFunction");
-        console.log(imgValue);
         await tryValidateIdScanFront(imgValue);
         props.history.push('/onboarding/idscanbackconfermation', onBoardingObject);
     };

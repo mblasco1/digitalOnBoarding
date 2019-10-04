@@ -148,7 +148,6 @@ function VideoScreenshot(props) {
             })
 
             videoContainer.current.addEventListener('loadeddata', (event) => {
-                console.log("loadeddata");
                 var modelPromise = cocoSsd.load();
                 Promise.all([modelPromise, webCamPromise])
                     .then(values => {
@@ -178,18 +177,24 @@ function VideoScreenshot(props) {
     };
 
     const renderPredictions = predictions => {
+        /*
         const ctx = document.getElementById("recognition").getContext("2d");
         ctx.clearRect(0, 0, ctx.canvas.width, ctx.canvas.height);
         // Font options.
         const font = "16px sans-serif";
         ctx.font = font;
         ctx.textBaseline = "top";
+        */
         predictions.forEach(prediction => {
             if (prediction.class == "book") {
+
+                
                 let x = prediction.bbox[0];
                 let y = prediction.bbox[1];
                 let width = prediction.bbox[2];
                 let height = prediction.bbox[3];
+
+                /*
                 //da videoframe gespielt ist...
                 x = videoContainer.current.width - (x + width);
 
@@ -204,13 +209,12 @@ function VideoScreenshot(props) {
 
                 //Nur für Textanzeige (Hintergrund)
                 //ctx.fillRect(x, y, textWidth + 26, textHeight + 4);
-
+                */
                 //Make Screenshot
                 var vid = document.getElementById("video");
-                const factorWidth = 0.75;
-                const factorHeight = 0.60;
-                if (width > (vid.videoWidth * factorWidth) && height > (vid.videoHeight * factorHeight) && prediction.score > 0.75) {
-                    console.log(prediction.score);
+                const factorWidth = 0.6;
+                const factorHeight = 0.50;
+                if (width > (vid.videoWidth * factorWidth) && height > (vid.videoHeight * factorHeight) && prediction.score > 0.70) {
                     console.log("-------> Snpashot!");
                     makeScreenshot();
                 } else {
@@ -243,7 +247,7 @@ function VideoScreenshot(props) {
         <div className={classes.actionSection}>
             <video ref={videoContainer} className={[classes.videoElement]} id="video" autoPlay></video>
             <canvas className={classes.canvasElement} id="recognition" width="600" height="500" />
-
+            
             <Snackbar anchorOrigin={{ vertical: 'top', horizontal: 'center' }} open={infoOpen} autoHideDuration={2000} onClose={hideInfoSnack}>
                 <SnackbarContent className={classes.info} onClose={hideInfoSnack} message="Bitte die ID so nah wie möglich zu der Kamera halten." />
             </Snackbar>

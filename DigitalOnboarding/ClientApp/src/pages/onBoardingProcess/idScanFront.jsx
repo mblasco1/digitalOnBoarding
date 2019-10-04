@@ -25,8 +25,6 @@ const IdScanFront = (props) => {
     }, []);
 
     var callbackFunction = async function chooseImageFile(imgValue) {
-        console.log("Daten callbackFunction");
-        console.log(imgValue);
         await tryValidateIdScanFront(imgValue);
         props.history.push('/onboarding/idscanfrontconfermation', onBoardingObject);
     };
@@ -91,8 +89,6 @@ const IdScanFront = (props) => {
         if (onBoardingObject.isFileUploaderUsed) {
             return <UploadButton id='uploadButton' parentCallback={callbackFunction} />;
         } else {
-            console.log("isFileUploaderUsed");
-            console.log(onBoardingObject.isFileUploaderUsed);
             return <VideoScreenshot id='videoScreenshot' parentCallback={callbackFunction} />;
         }
     }
