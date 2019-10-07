@@ -117,15 +117,14 @@ const PhoneNumber = (props) => {
 			<TitleSection title="Los geht's!" Icon={PhoneIcon} subtitle="Bitte ihre Mobilenumber eingeben" />
 			<div className={classes.actionSection}>
 
-				<TextField id="phone"
-					label="Mobilenummer"
-					error={!phoneValidation.phone.isValid && phoneValidation.phone.touched}
-					helperText={!phoneValidation.phone.isValid && phoneValidation.phone.touched ? phoneValidation.phone.message : ""}
-					onBlur={handleChange}
-					className={classes.textFieldPhone}
+                <TextField id="phone"
+                    label="Mobilenummer"
+                    error={!phoneValidation.phone.isValid && phoneValidation.phone.touched}
+                    helperText={!phoneValidation.phone.isValid && phoneValidation.phone.touched ? phoneValidation.phone.message : ""}
+                    onBlur={handleChange}
+                    className={classes.textFieldPhone}
                     margin="normal"
-                    type="number" pattern="[0-9]*" inputmode="numeric"/>
-
+                    type="tel" pattern="[0-9]*" inputmode="numeric" />
 
 				<Fab onClick={nextStep} aria-label="arrow" className={classes.fab}>
 					<ArrowIcon color='primary' />
