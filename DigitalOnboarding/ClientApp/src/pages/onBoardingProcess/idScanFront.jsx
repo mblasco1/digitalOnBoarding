@@ -3,6 +3,7 @@ import React, { useEffect, useState } from "react";
 import { withStyles } from "@material-ui/core";
 import Snackbar from '@material-ui/core/Snackbar';
 import SnackbarContent from '@material-ui/core/SnackbarContent';
+import LoadingOverlay from 'react-loading-overlay';
 
 //import resources
 import { ReactComponent as ScanIcon } from "../../images/idScanIcon.svg";
@@ -15,6 +16,9 @@ import { RegulaForensics } from "../../components/RegulaForensics";
 import VideoScreenshot from "./components/videoScreenshot";
 import UploadButton from "./components/uploadButton";
 
+
+
+
 const styles = (theme) => ({
     error: {
         backgroundColor: theme.palette.error.dark,
@@ -24,13 +28,18 @@ const styles = (theme) => ({
 const IdScanFront = (props) => {
     const { classes, setStep } = props;
     const [failedOpen, setFailedOpen] = useState(false);
+    const [isActive, setIsActive] = useState(false);
 
     useEffect(() => {
         setStep(2);
     }, []);
 
     var callbackFunction = async function chooseImageFile(imgValue) {
+
+        showIsActive();
         var validateSuccessful = await tryValidateIdScanFront(imgValue);
+        hideIsActive();
+
         if (validateSuccessful) {
             props.history.push('/onboarding/idscanfrontconfermation', onBoardingObject);
         } else {
@@ -128,13 +137,22 @@ const IdScanFront = (props) => {
     const showFailedSnack = () => { setFailedOpen(true); }
     const hideFailedSnack = () => { setFailedOpen(false); }
 
+    const showIsActive = () => { setIsActive(true); }
+    const hideIsActive = () => { setIsActive(false); }
+
     return (
         <React.Fragment>
-            <TitleSection title="ID Vorderseite" Icon={ScanIcon} subtitle="Bitte die Vorderseite Ihrer ID scannen" />
-            {body()}
-            <Snackbar anchorOrigin={{ vertical: 'top', horizontal: 'center' }} open={failedOpen} autoHideDuration={3000} onClose={hideFailedSnack}>
-                <SnackbarContent className={classes.error} onClose={hideFailedSnack} message={'ID Karte wurde nicht erkannt, versuchen Sie es erneut!'} />
-            </Snackbar>
+            <LoadingOverlay
+                active={isActive}
+                spinner
+                text='Reading data...'
+            >
+                <TitleSection title="ID Vorderseite" Icon={ScanIcon} subtitle="Bitte die Vorderseite Ihrer ID scannen" />
+                {body()}
+                <Snackbar anchorOrigin={{ vertical: 'top', horizontal: 'center' }} open={failedOpen} autoHideDuration={3000} onClose={hideFailedSnack}>
+                    <SnackbarContent className={classes.error} onClose={hideFailedSnack} message={'ID Karte wurde nicht erkannt, versuchen Sie es erneut!'} />
+                </Snackbar>
+            </LoadingOverlay>
         </React.Fragment>
     );
 }
