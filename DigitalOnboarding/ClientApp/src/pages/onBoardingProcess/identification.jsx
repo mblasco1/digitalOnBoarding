@@ -309,7 +309,8 @@ const PhoneNumber = (props) => {
                         onBlur={handleChange}
                         label="Email"
                         className={classes.textFieldEmail}
-                        margin="normal" />
+                        margin="normal"
+                        inputmode="email" />
                 </div>
                 <div>
                     <FormControl>

@@ -82,12 +82,10 @@ const IdScanBack = (props) => {
                 //GET Data from IdCard Front
                 let dataOCR = await regulaForensics.getTransactionResultJson(transactionId, RegulaForensics.eRPRM_ResultType.OCRLexicalAnalyze, xToken);
                 let parsedDataOCR = regulaForensics.getParsedOCRLexicalAnalyzeData(dataOCR)
-                debugger;
                 onBoardingObject.idPhotoBackDataObjectOCR = parsedDataOCR;
 
                 if (parsedDataOCR == null) {
                     console.error("Cant read any data OCR on IdCard Back");
-                    debugger;
                 }
 
                 let dataMRZ = await regulaForensics.getTransactionResultJson(transactionId, RegulaForensics.eRPRM_ResultType.MRZ_OCR_Extended, xToken);
@@ -100,7 +98,6 @@ const IdScanBack = (props) => {
                 }
             }
             catch (e) {
-                debugger;
                 console.log("Error in parsing data of ID Back (OCRLexicalAnalyze)");
                 console.log(e);
                 return false;
