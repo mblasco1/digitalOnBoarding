@@ -608,7 +608,6 @@ const eVisualFieldType = Object.freeze({
     498: 'Selectee Indicator',
 });
 
-
 export class RegulaForensics extends Component {
 
     constructor() {

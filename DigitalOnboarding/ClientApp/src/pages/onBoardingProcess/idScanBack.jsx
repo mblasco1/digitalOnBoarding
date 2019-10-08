@@ -5,14 +5,14 @@ import Snackbar from '@material-ui/core/Snackbar';
 import SnackbarContent from '@material-ui/core/SnackbarContent';
 import LoadingOverlay from 'react-loading-overlay';
 
+import { RegulaForensics } from "../../components/RegulaForensics";
+
 //import resources
 import { ReactComponent as ScanIcon } from "../../images/idScanIcon.svg";
 import { onBoardingObject, onBoardingUtilities } from "../../resources/onBoardingObject";
 
 //import components
 import TitleSection from "./components/_titleSection";
-
-import { RegulaForensics } from "../../components/RegulaForensics";
 import VideoScreenshot from "./components/videoScreenshot";
 import UploadButton from "./components/uploadButton";
 
@@ -47,6 +47,8 @@ const IdScanBack = (props) => {
     };
 
     var tryValidateIdScanFront = async function (idPhotoFront) {
+
+        
         let regulaForensics = new RegulaForensics();
         let xToken = await regulaForensics.authenticate();
         if (xToken == null) {
@@ -104,6 +106,8 @@ const IdScanBack = (props) => {
                 return false;
             }
         }
+
+        
         return true;
     }
 
