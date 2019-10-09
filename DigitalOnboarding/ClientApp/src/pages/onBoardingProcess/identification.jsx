@@ -190,7 +190,7 @@ const PhoneNumber = (props) => {
 
     const onlyNumbers = (evt) => {
         const keyCode = evt.keyCode || evt.which;
-        if (!((keyCode >= 48 && keyCode <= 57) || (keyCode >= 96 && keyCode <= 105) || keyCode === 46 || keyCode === 37 || keyCode === 39 || keyCode == 8 || keyCode === 9)) {
+        if (!((keyCode >= 48 && keyCode <= 57) || (keyCode >= 96 && keyCode <= 105) || keyCode === 46 || keyCode === 37 || keyCode === 39 || keyCode === 8 || keyCode === 9)) {
             evt.preventDefault();
         }
     }
