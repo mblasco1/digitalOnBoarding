@@ -56,7 +56,7 @@ const IdScanFront = (props) => {
 
         //TODO: Check Authentication...
         let transactionId = await regulaForensics.submitTransaction(xToken, idPhotoFront, '.jpeg');
-        if (transactionId) { //Check value is NOT: null, undefined NaN, empty string, 0 or false
+        if (transactionId == "") { 
             console.error("TransactionID is empty or null");
             return false;
         }
