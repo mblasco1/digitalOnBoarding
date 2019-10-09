@@ -9,8 +9,6 @@ import { ReactComponent as ScanIcon } from "../../images/idScanIcon.svg";
 
 //import components
 import TitleSection from "./components/_titleSection";
-import { onBoardingObject } from "../../resources/onBoardingObject";
-
 
 const styles = theme => ({
 	actionSection: {

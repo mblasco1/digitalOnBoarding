@@ -16,9 +16,6 @@ import TitleSection from "./components/_titleSection";
 import VideoScreenshot from "./components/videoScreenshot";
 import UploadButton from "./components/uploadButton";
 
-
-
-
 const styles = (theme) => ({
     error: {
         backgroundColor: theme.palette.error.dark,
@@ -59,7 +56,7 @@ const IdScanFront = (props) => {
 
         //TODO: Check Authentication...
         let transactionId = await regulaForensics.submitTransaction(xToken, idPhotoFront, '.jpeg');
-        if (transactionId == "") {
+        if (transactionId) { //Check value is NOT: null, undefined NaN, empty string, 0 or false
             console.error("TransactionID is empty or null");
             return false;
         }
