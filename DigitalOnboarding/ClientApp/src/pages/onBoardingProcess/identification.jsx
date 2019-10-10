@@ -137,16 +137,19 @@ const PhoneNumber = (props) => {
     }
 
     const handleChange = (evt) => {
-        //copy, mutate, replace state
         let copiedIdentificationObject = { ...identificationValidation };
-
         let objectToValidate = copiedIdentificationObject[evt.target.id];
+
+        let needValidateAddress = (objectToValidate.value != evt.target.value && evt.target.id != "email") //email gehört nicht zur addresse !
+
         objectToValidate.value = evt.target.value;
         validateObject(objectToValidate);
-
         setIdentificationValidation(copiedIdentificationObject);
 
-        tryValidateAddress();
+        if (needValidateAddress) {
+            //nur validieren wenn sich was an der Adresse geändert hat.
+            tryValidateAddress();
+        }
     }
 
     var validateAddress = async function () {
@@ -175,7 +178,7 @@ const PhoneNumber = (props) => {
             identificationValidation.zip.isValid &&
             identificationValidation.city.isValid;
 
-        if (canBeValidated && (adressValidationState === addressValidationEnum.NotPossible || adressValidationState === addressValidationEnum.Failed)) {
+        if (canBeValidated) {
             setAddressValidationState(addressValidationEnum.Pending);
             validateAddress();
         }
