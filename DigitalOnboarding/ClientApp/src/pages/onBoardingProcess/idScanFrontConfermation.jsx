@@ -66,7 +66,7 @@ const IdScanFrontConfermation = (props) => {
         }
     }
 
-    const Picture = ({ data, selectedClass }) => <img src={"data:image/jpeg; base64," + data} className={selectedClass} />
+    const Picture = ({ data, selectedClass }) => <img src={"data:image/jpeg;base64," + data} className={selectedClass} />
 
     return (
         <React.Fragment>

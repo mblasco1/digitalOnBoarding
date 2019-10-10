@@ -50,7 +50,7 @@ const IdScanBackConfermation = (props) => {
 		props.history.push("/onBoarding/livenessCheck", props.location.state);
     }
 
-    const Picture = ({ data, selectedClass }) => <img src={"data:image/jpeg; base64," + data} className={selectedClass} />
+    const Picture = ({ data, selectedClass }) => <img src={"data:image/jpeg;base64," + data} className={selectedClass} />
 
 
 	return (

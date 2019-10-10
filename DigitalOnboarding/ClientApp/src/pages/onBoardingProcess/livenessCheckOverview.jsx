@@ -112,7 +112,7 @@ const LivenessCheckOverview = (props) => {
     const hideFailedSnack = () => { setFailedOpen(false); }
 
     const Picture = ({ data, selectedClass }) => <img className={selectedClass} src={data} height="200" />
-    const PictureSrc = ({ data, selectedClass }) => <img src={"data:image/jpeg; base64," + data} className={selectedClass} height="200" />
+    const PictureSrc = ({ data, selectedClass }) => <img src={"data:image/jpeg;base64," + data} className={selectedClass} height="200" />
 
     return (
         <React.Fragment>
@@ -126,7 +126,7 @@ const LivenessCheckOverview = (props) => {
                                 <img className={classes.picture} src={props.location.state.livenessDetectionSecondPicture} />
                             </div>
                             <div className={classes.pictureStyle}>
-                                <img src={"data:image/jpeg; base64," + props.location.state.idPhotoFrontPortrait} className={classes.picture} />
+                                <img src={"data:image/jpeg;base64," + props.location.state.idPhotoFrontPortrait} className={classes.picture} />
                             </div>
                         </div>
                         :
