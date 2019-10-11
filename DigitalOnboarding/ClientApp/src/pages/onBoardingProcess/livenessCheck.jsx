@@ -111,8 +111,6 @@ const LivenessCheck = (props) => {
 
     function startVideo() {
 
-
-
         var promisifiedOldGUM = function (constraints, successCallback, errorCallback) {
 
             // First get ahold of getUserMedia, if present
@@ -132,21 +130,17 @@ const LivenessCheck = (props) => {
             });
 
         }
-        
         // Older browsers might not implement mediaDevices at all, so we set an empty object first
         if (navigator.mediaDevices === undefined) {
-        navigator.mediaDevices = {};
+            navigator.mediaDevices = {};
         }
-        
+
         // Some browsers partially implement mediaDevices. We can't just assign an object
         // with getUserMedia as it would overwrite existing properties.
         // Here, we will just add the getUserMedia property if it's missing.
         if (navigator.mediaDevices.getUserMedia === undefined) {
-        navigator.mediaDevices.getUserMedia = promisifiedOldGUM;
+            navigator.mediaDevices.getUserMedia = promisifiedOldGUM;
         }
-        
-
-
 
         let constraints = { audio: false, video: { facingMode: "user" } };
 
@@ -162,32 +156,27 @@ const LivenessCheck = (props) => {
 
         console.log(hdCamera);
 
-        try {
-            navigator.mediaDevices.getUserMedia(constraints)
-                .then(function (mediaStream) {
+        navigator.mediaDevices.getUserMedia(constraints)
+            .then(function (mediaStream) {
 
-                    console.log('Media stream created:', mediaStream.getVideoTracks()[0]);
-                    video.srcObject = mediaStream;
-                    video.onloadedmetadata = function (e) {
-                        console.log('Playing live media stream');
-                        video.play();
-                        if (canvasContainer.current !== null) {
-                            canvasContainer.current.selectedStream = mediaStream;
-                            canvasContainer.current.stop = function stopStream() {
-                                canvasContainer.current.selectedStream.getTracks()[0].stop();
-                            }
-                            if (initCanvases) { initCanvases(); }
+                console.log('Media stream created:', mediaStream.getVideoTracks()[0]);
+                video.srcObject = mediaStream;
+                video.onloadedmetadata = function (e) {
+                    console.log('Playing live media stream');
+                    video.play();
+                    if (canvasContainer.current !== null) {
+                        canvasContainer.current.selectedStream = mediaStream;
+                        canvasContainer.current.stop = function stopStream() {
+                            canvasContainer.current.selectedStream.getTracks()[0].stop();
                         }
-                    };
-                })
-                .catch(function (err) {
-                    console.log('getUserMedia() error: ', err);
-                    alert(err.name + ': ' + err.message);
-                });
-        } catch (e) {
-            alert("something went wrong");
-            alert(e.name + ': ' + e.message);
-        }
+                        if (initCanvases) { initCanvases(); }
+                    }
+                };
+            })
+            .catch(function (err) {
+                console.log('getUserMedia() error: ', err);
+                alert(err.name + ': ' + err.message);
+            });
 
 
     }
