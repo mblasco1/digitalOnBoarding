@@ -39,7 +39,7 @@ const Welcome = (props) => {
 				<TimLogo className={classes.logo} />
             </Fab>
             <br></br>
-            <div>Version: 1.1.2.16</div>
+            <div>Version: 1.1.2.17</div>
 		</div>
 	);
 
