@@ -278,7 +278,7 @@ const PhoneNumber = (props) => {
                         label="Postleitzahl"
                         className={classes.textFieldZip}
                         margin="normal"
-                        type="number" pattern="[0-9]*" inputmode="numeric" />
+                        type="number" pattern="[0-9]*" inputMode="numeric" />
 
                     <TextField id="city"
                         label="Stadt"
@@ -313,7 +313,7 @@ const PhoneNumber = (props) => {
                         label="Email"
                         className={classes.textFieldEmail}
                         margin="normal"
-                        inputmode="email" />
+                        inputMode="email" />
                 </div>
                 <div>
                     <FormControl>

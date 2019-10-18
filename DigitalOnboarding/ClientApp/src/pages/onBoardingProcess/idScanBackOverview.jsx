@@ -48,14 +48,14 @@ const IdScanBackOverview = (props) => {
     const useVideoScreenShotFunction = () => {
         chooseOpperation(false);
     }
-    
+
     function chooseOpperation(isFileUploaderUsed) {
         onBoardingUtilities.copyFromObject(onBoardingObject, props.location.state);
         onBoardingObject.isFileUploaderUsed = isFileUploaderUsed;
-        props.history.push('/onboarding/idscanback', onBoardingObject);
+        props.history.push('/onboarding/idScanBack', onBoardingObject);
     }
 
-var    componentDidMount = () => {
+    var componentDidMount = () => {
         if (window.screen.width >= 800) { chooseOpperation(true); }
     }
 

@@ -59,9 +59,9 @@ const IdScanFrontConfermation = (props) => {
             if (window.screen.width <= 800) {
                 //wenn smartphone is used, direct fileupload
                 onBoardingObject.isFileUploaderUsed = true;
-                props.history.push('/onboarding/idscanback', onBoardingObject);
+                props.history.push('/onboarding/idScanBack', onBoardingObject);
             } else {
-                props.history.push('/onboarding/idscanbackoverview', onBoardingObject);
+                props.history.push('/onboarding/idScanBackOverview', onBoardingObject);
             }
         }
     }

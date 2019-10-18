@@ -124,7 +124,7 @@ const PhoneNumber = (props) => {
                     onBlur={handleChange}
                     className={classes.textFieldPhone}
                     margin="normal"
-                    type="tel" pattern="[0-9]*" inputmode="numeric" />
+                    type="tel" pattern="[0-9]*" inputMode="numeric" />
 
 				<Fab onClick={nextStep} aria-label="arrow" className={classes.fab}>
 					<ArrowIcon color='primary' />

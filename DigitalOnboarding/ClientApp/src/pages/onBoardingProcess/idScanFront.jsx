@@ -38,11 +38,11 @@ const IdScanFront = (props) => {
         hideIsActive();
 
         if (validateSuccessful) {
-            props.history.push('/onboarding/idscanfrontconfermation', onBoardingObject);
+            props.history.push('/onboarding/idScanFrontConfermation', onBoardingObject);
         } else {
             //try again
             showFailedSnack();
-            props.history.push('/onboarding/idscanfront', onBoardingObject);
+            props.history.push('/onboarding/idScanFront', onBoardingObject);
         }
     };
 
@@ -124,10 +124,12 @@ const IdScanFront = (props) => {
     }
 
     const body = function GetBodyElement() {
-        if (!onBoardingObject.isFileUploaderUsed) {
-            return <VideoScreenshot id='videoScreenshot' parentCallback={callbackFunction} />;
-        } else {
+        if (onBoardingObject.isFileUploaderUsed == null) {
+            return null;
+        } else if (onBoardingObject.isFileUploaderUsed) {
             return <UploadButton id='uploadButton' parentCallback={callbackFunction} />;
+        } else {
+            return <VideoScreenshot id='videoScreenshot' parentCallback={callbackFunction} />;
         }
     }
 

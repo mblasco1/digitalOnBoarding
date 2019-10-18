@@ -38,19 +38,26 @@ const IdScanBack = (props) => {
         hideIsActive();
 
         if (validateSuccessful) {
-            props.history.push('/onboarding/idscanbackconfermation', onBoardingObject);
+            try {
+                console.log(onBoardingObject);
+                props.history.push('/onboarding/idScanBackConfermation', onBoardingObject);
+            } catch (e) {
+                console.log("oha... ");
+                console.log(e);
+            }
         } else {
             //try again
             showFailedSnack();
-            props.history.push('/onboarding/idscanback', onBoardingObject);
+            props.history.push('/onboarding/idScanBack', onBoardingObject);
         }
     };
 
     var tryValidateIdScanFront = async function (idPhotoBack) {
-
         
+
         let regulaForensics = new RegulaForensics();
         let xToken = await regulaForensics.authenticate();
+        
         if (xToken == null) {
             console.error("xToken is empty or null");
             return false;
@@ -69,12 +76,13 @@ const IdScanBack = (props) => {
                 break;
             }
         }
-
+        
         if (status == RegulaForensics.TransactionStatus.Error) {
             console.error("state of transaction ends in a error");
             return false;
         } else {
             let img = await regulaForensics.getImages(transactionId, xToken);
+
             onBoardingUtilities.copyFromObject(onBoardingObject, props.location.state);
             onBoardingObject.idPhotoBack = img;
 
@@ -103,16 +111,16 @@ const IdScanBack = (props) => {
                 return false;
             }
         }
-        
-        
         return true;
     }
 
     const body = function GetBodyElement() {
-        if (!onBoardingObject.isFileUploaderUsed) {
-            return <VideoScreenshot id='videoScreenshot' parentCallback={callbackFunction} />;
-        } else {
+        if (onBoardingObject.isFileUploaderUsed == null) {
+            return null;
+        } else if (onBoardingObject.isFileUploaderUsed) {
             return <UploadButton id='uploadButton' parentCallback={callbackFunction} />;
+        } else {
+            return <VideoScreenshot id='videoScreenshot' parentCallback={callbackFunction} />;
         }
     }
 
