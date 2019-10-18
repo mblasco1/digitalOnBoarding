@@ -5,6 +5,9 @@
   "dependencies": {
     "@material-ui/core": "^4.3.2",
     "@material-ui/icons": "^4.2.1",
+    "@tensorflow-models/coco-ssd": "^2.0.0",
+    "@tensorflow/tfjs-converter": "^1.2.11",
+    "@tensorflow/tfjs-core": "^1.2.11",
     "bootstrap": "^4.3.1",
     "clsx": "^1.0.4",
     "jquery": "^3.4.1",
@@ -12,6 +15,7 @@
     "react": "^16.8.6",
     "react-bootstrap": "^1.0.0-beta.8",
     "react-dom": "^16.8.6",
+    "react-loading-overlay": "^1.0.1",
     "react-material-ui-form-validator": "^2.0.9",
     "react-router-bootstrap": "^0.25.0",
     "react-router-dom": "^5.0.0",
