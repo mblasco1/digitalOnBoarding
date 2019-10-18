@@ -46,7 +46,7 @@ const IdScanBack = (props) => {
         }
     };
 
-    var tryValidateIdScanFront = async function (idPhotoFront) {
+    var tryValidateIdScanFront = async function (idPhotoBack) {
 
         
         let regulaForensics = new RegulaForensics();
@@ -56,7 +56,7 @@ const IdScanBack = (props) => {
             return false;
         }
 
-        let transactionId = await regulaForensics.submitTransaction(xToken, idPhotoFront, '.jpeg');
+        let transactionId = await regulaForensics.submitTransaction(xToken, idPhotoBack, '.jpeg');
         if (transactionId == "") {
             console.error("TransactionID is empty or null");
             return false;
@@ -103,7 +103,7 @@ const IdScanBack = (props) => {
                 return false;
             }
         }
-
+        
         
         return true;
     }
